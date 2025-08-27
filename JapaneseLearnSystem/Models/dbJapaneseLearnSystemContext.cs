@@ -4,12 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JapaneseLearnSystem.Models;
 
-public partial class JapaneseLearnSystemContext : DbContext
+public partial class dbJapaneseLearnSystemContext : DbContext
 {
-    public JapaneseLearnSystemContext(DbContextOptions<JapaneseLearnSystemContext> options)
+    public dbJapaneseLearnSystemContext(DbContextOptions<dbJapaneseLearnSystemContext> options)
         : base(options)
     {
     }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+       => optionsBuilder.UseSqlServer("Data Source=C501A24;Database=dbJapaneseLearnSystem;TrustServerCertificate=True;User ID=abc;Password=123");
+
 
     public virtual DbSet<JPLTLevel> JPLTLevel { get; set; }
 

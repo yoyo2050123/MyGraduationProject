@@ -1,24 +1,7 @@
-using JapaneseLearnSystem.Models;
-using Microsoft.EntityFrameworkCore;
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<dbJapaneseLearnSystemContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("dbJapaneseLearnSystem")));
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
 
 var app = builder.Build();
 
