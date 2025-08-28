@@ -13,8 +13,6 @@ public partial class SubscriptionPlan
 
     public int? LimitCount { get; set; }
 
-    public virtual ICollection<Member> Member { get; set; } = new List<Member>();
-
     public virtual ICollection<MemberPlan> MemberPlan { get; set; } = new List<MemberPlan>();
 
     public virtual ICollection<PaymentRecord> PaymentRecord { get; set; } = new List<PaymentRecord>();

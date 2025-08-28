@@ -9,22 +9,22 @@ using JapaneseLearnSystem.Models;
 
 namespace JapaneseLearnSystem.Controllers
 {
-    public class JPLTLevelsController : Controller
+    public class JLPTLevelsController : Controller
     {
         private readonly dbJapaneseLearnSystemContext _context;
 
-        public JPLTLevelsController(dbJapaneseLearnSystemContext context)
+        public JLPTLevelsController(dbJapaneseLearnSystemContext context)
         {
             _context = context;
         }
 
-        // GET: JPLTLevels
+        // GET: JLPTLevels
         public async Task<IActionResult> Index()
         {
-            return View(await _context.JPLTLevel.ToListAsync());
+            return View(await _context.JLPTLevel.ToListAsync());
         }
 
-        // GET: JPLTLevels/Details/5
+        // GET: JLPTLevels/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +32,39 @@ namespace JapaneseLearnSystem.Controllers
                 return NotFound();
             }
 
-            var jPLTLevel = await _context.JPLTLevel
-                .FirstOrDefaultAsync(m => m.JPLTLevelID == id);
-            if (jPLTLevel == null)
+            var jLPTLevel = await _context.JLPTLevel
+                .FirstOrDefaultAsync(m => m.JLPTLevelID == id);
+            if (jLPTLevel == null)
             {
                 return NotFound();
             }
 
-            return View(jPLTLevel);
+            return View(jLPTLevel);
         }
 
-        // GET: JPLTLevels/Create
+        // GET: JLPTLevels/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: JPLTLevels/Create
+        // POST: JLPTLevels/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("JPLTLevelID,JPLTLevelName")] JPLTLevel jPLTLevel)
+        public async Task<IActionResult> Create([Bind("JLPTLevelID,JLPTLevelName,Description")] JLPTLevel jLPTLevel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(jPLTLevel);
+                _context.Add(jLPTLevel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(jPLTLevel);
+            return View(jLPTLevel);
         }
 
-        // GET: JPLTLevels/Edit/5
+        // GET: JLPTLevels/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +72,22 @@ namespace JapaneseLearnSystem.Controllers
                 return NotFound();
             }
 
-            var jPLTLevel = await _context.JPLTLevel.FindAsync(id);
-            if (jPLTLevel == null)
+            var jLPTLevel = await _context.JLPTLevel.FindAsync(id);
+            if (jLPTLevel == null)
             {
                 return NotFound();
             }
-            return View(jPLTLevel);
+            return View(jLPTLevel);
         }
 
-        // POST: JPLTLevels/Edit/5
+        // POST: JLPTLevels/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("JPLTLevelID,JPLTLevelName")] JPLTLevel jPLTLevel)
+        public async Task<IActionResult> Edit(int id, [Bind("JLPTLevelID,JLPTLevelName,Description")] JLPTLevel jLPTLevel)
         {
-            if (id != jPLTLevel.JPLTLevelID)
+            if (id != jLPTLevel.JLPTLevelID)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace JapaneseLearnSystem.Controllers
             {
                 try
                 {
-                    _context.Update(jPLTLevel);
+                    _context.Update(jLPTLevel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!JPLTLevelExists(jPLTLevel.JPLTLevelID))
+                    if (!JLPTLevelExists(jLPTLevel.JLPTLevelID))
                     {
                         return NotFound();
                     }
@@ -112,10 +112,10 @@ namespace JapaneseLearnSystem.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(jPLTLevel);
+            return View(jLPTLevel);
         }
 
-        // GET: JPLTLevels/Delete/5
+        // GET: JLPTLevels/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,34 +123,34 @@ namespace JapaneseLearnSystem.Controllers
                 return NotFound();
             }
 
-            var jPLTLevel = await _context.JPLTLevel
-                .FirstOrDefaultAsync(m => m.JPLTLevelID == id);
-            if (jPLTLevel == null)
+            var jLPTLevel = await _context.JLPTLevel
+                .FirstOrDefaultAsync(m => m.JLPTLevelID == id);
+            if (jLPTLevel == null)
             {
                 return NotFound();
             }
 
-            return View(jPLTLevel);
+            return View(jLPTLevel);
         }
 
-        // POST: JPLTLevels/Delete/5
+        // POST: JLPTLevels/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var jPLTLevel = await _context.JPLTLevel.FindAsync(id);
-            if (jPLTLevel != null)
+            var jLPTLevel = await _context.JLPTLevel.FindAsync(id);
+            if (jLPTLevel != null)
             {
-                _context.JPLTLevel.Remove(jPLTLevel);
+                _context.JLPTLevel.Remove(jLPTLevel);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool JPLTLevelExists(int id)
+        private bool JLPTLevelExists(int id)
         {
-            return _context.JPLTLevel.Any(e => e.JPLTLevelID == id);
+            return _context.JLPTLevel.Any(e => e.JLPTLevelID == id);
         }
     }
 }

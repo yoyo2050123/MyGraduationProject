@@ -5,6 +5,7 @@ namespace JapaneseLearnSystem.Models;
 
 public partial class Member
 {
+
     public string MemberID { get; set; } = null!;
 
     public string Name { get; set; } = null!;
@@ -28,8 +29,6 @@ public partial class Member
     public virtual ICollection<Note> Note { get; set; } = new List<Note>();
 
     public virtual ICollection<PaymentRecord> PaymentRecord { get; set; } = new List<PaymentRecord>();
-
-    public virtual SubscriptionPlan Plan { get; set; } = null!;
 
     public virtual ICollection<Record> Record { get; set; } = new List<Record>();
 

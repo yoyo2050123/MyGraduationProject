@@ -15,7 +15,7 @@ public partial class MemberPlan
 
     public DateTime EndDate { get; set; }
 
-    public string ReMark_Source { get; set; } = null!;
+    public string RemarkSource { get; set; } = null!;
 
     public byte PlanStatusID { get; set; }
 

@@ -13,9 +13,9 @@ public partial class Word
 
     public string WordTranslate { get; set; } = null!;
 
-    public int JPLTLevelID { get; set; }
+    public int JLPTLevelID { get; set; }
 
-    public virtual JPLTLevel JPLTLevel { get; set; } = null!;
+    public virtual JLPTLevel JLPTLevel { get; set; } = null!;
 
     public virtual ICollection<QuestionTemplate> QuestionTemplate { get; set; } = new List<QuestionTemplate>();
 

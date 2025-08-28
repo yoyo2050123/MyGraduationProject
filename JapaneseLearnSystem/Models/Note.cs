@@ -13,11 +13,11 @@ public partial class Note
 
     public string Translate { get; set; } = null!;
 
-    public int JPLTLevelID { get; set; }
+    public int JLPTLevelID { get; set; }
 
     public string MemberID { get; set; } = null!;
 
-    public virtual JPLTLevel JPLTLevel { get; set; } = null!;
+    public virtual JLPTLevel JLPTLevel { get; set; } = null!;
 
     public virtual Member Member { get; set; } = null!;
 
