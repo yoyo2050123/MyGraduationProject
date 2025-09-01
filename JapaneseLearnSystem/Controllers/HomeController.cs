@@ -34,3 +34,4 @@ namespace JapaneseLearnSystem.Controllers
 
 //從github抓下來的程式碼 記得修改dbJapaneseLearnSystemContext.cs跟Program.cs的連線字串
 //就是"Data Source=KAZE;Database=dbJapaneseLearnSystem;TrustServerCertificate=True;User ID=abc;Password=123"這串
+//記得以後要修改Program.cs的話 也要同步修改這邊的連線字串，就是"dbJapaneseLearnSystemConnection"，這個要跟appsettings.json的連線字串名稱一樣

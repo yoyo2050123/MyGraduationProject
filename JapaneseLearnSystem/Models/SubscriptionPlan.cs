@@ -11,7 +11,11 @@ public partial class SubscriptionPlan
 
     public string FeeInfo { get; set; } = null!;
 
-    public int? LimitCount { get; set; }
+    public int? DailyQuestionLimit { get; set; }
+
+    public int? LearnedWordLimit { get; set; }
+
+    public int? FavoriteLimit { get; set; }
 
     public virtual ICollection<Member> Member { get; set; } = new List<Member>();
 

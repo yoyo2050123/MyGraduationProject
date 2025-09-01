@@ -6,6 +6,8 @@ namespace JapaneseLearnSystem.Models;
 
 public partial class dbJapaneseLearnSystemContext : DbContext
 {
+    
+
     public dbJapaneseLearnSystemContext(DbContextOptions<dbJapaneseLearnSystemContext> options)
         : base(options)
     {
@@ -47,7 +49,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
     {
         modelBuilder.Entity<JLPTLevel>(entity =>
         {
-            entity.HasKey(e => e.JLPTLevelID).HasName("PK__JLPTLeve__8536E55538D03271");
+            entity.HasKey(e => e.JLPTLevelID).HasName("PK__JLPTLeve__8536E555BE00EC0B");
 
             entity.Property(e => e.Description).HasMaxLength(50);
             entity.Property(e => e.JLPTLevelName).HasMaxLength(2);
@@ -55,7 +57,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<LearnRecordTable>(entity =>
         {
-            entity.HasKey(e => e.RecordID).HasName("PK__LearnRec__FBDF78C95D10C898");
+            entity.HasKey(e => e.RecordID).HasName("PK__LearnRec__FBDF78C97764B982");
 
             entity.Property(e => e.RecordID).HasMaxLength(10);
             entity.Property(e => e.Accuracy).HasColumnType("decimal(5, 2)");
@@ -64,12 +66,12 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.LearnRecordTable)
                 .HasForeignKey(d => d.MemberID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__LearnReco__Membe__5DCAEF64");
+                .HasConstraintName("FK__LearnReco__Membe__628FA481");
         });
 
         modelBuilder.Entity<Member>(entity =>
         {
-            entity.HasKey(e => e.MemberID).HasName("PK__Member__0CF04B3800C0E539");
+            entity.HasKey(e => e.MemberID).HasName("PK__Member__0CF04B385012964D");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.Email).HasMaxLength(100);
@@ -79,7 +81,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Plan).WithMany(p => p.Member)
                 .HasForeignKey(d => d.PlanID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Member_Plan");
+                .HasConstraintName("FK__Member__PlanID__3B75D760");
 
             entity.HasMany(d => d.Role).WithMany(p => p.Member)
                 .UsingEntity<Dictionary<string, object>>(
@@ -87,14 +89,14 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                     r => r.HasOne<Role>().WithMany()
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__MemberRol__RoleI__3C69FB99"),
+                        .HasConstraintName("FK__MemberRol__RoleI__412EB0B6"),
                     l => l.HasOne<Member>().WithMany()
                         .HasForeignKey("MemberID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__MemberRol__Membe__3B75D760"),
+                        .HasConstraintName("FK__MemberRol__Membe__403A8C7D"),
                     j =>
                     {
-                        j.HasKey("MemberID", "RoleID").HasName("PK__MemberRo__B45FE7DB7E633104");
+                        j.HasKey("MemberID", "RoleID").HasName("PK__MemberRo__B45FE7DB387981C7");
                         j.IndexerProperty<string>("MemberID").HasMaxLength(10);
                         j.IndexerProperty<string>("RoleID").HasMaxLength(10);
                     });
@@ -102,7 +104,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<MemberAccount>(entity =>
         {
-            entity.HasKey(e => e.Account).HasName("PK__MemberAc__B0C3AC47EA6EF15A");
+            entity.HasKey(e => e.Account).HasName("PK__MemberAc__B0C3AC47D78E76D7");
 
             entity.Property(e => e.Account).HasMaxLength(50);
             entity.Property(e => e.MemberID).HasMaxLength(10);
@@ -111,12 +113,12 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.MemberAccount)
                 .HasForeignKey(d => d.MemberID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MemberAcc__Membe__4222D4EF");
+                .HasConstraintName("FK__MemberAcc__Membe__46E78A0C");
         });
 
         modelBuilder.Entity<MemberPlan>(entity =>
         {
-            entity.HasKey(e => e.MemberPlanID).HasName("PK__MemberPl__F266CFF4B6D9FC11");
+            entity.HasKey(e => e.MemberPlanID).HasName("PK__MemberPl__F266CFF4E55D44BA");
 
             entity.Property(e => e.MemberPlanID).HasMaxLength(50);
             entity.Property(e => e.MemberID).HasMaxLength(10);
@@ -125,22 +127,22 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.MemberPlan)
                 .HasForeignKey(d => d.MemberID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MemberPla__Membe__68487DD7");
+                .HasConstraintName("FK__MemberPla__Membe__693CA210");
 
             entity.HasOne(d => d.Plan).WithMany(p => p.MemberPlan)
                 .HasForeignKey(d => d.PlanID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MemberPla__PlanI__693CA210");
+                .HasConstraintName("FK__MemberPla__PlanI__6A30C649");
 
             entity.HasOne(d => d.PlanStatus).WithMany(p => p.MemberPlan)
                 .HasForeignKey(d => d.PlanStatusID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MemberPla__PlanS__6A30C649");
+                .HasConstraintName("FK__MemberPla__PlanS__6B24EA82");
         });
 
         modelBuilder.Entity<MemberTel>(entity =>
         {
-            entity.HasKey(e => e.SN).HasName("PK__MemberTe__32151C64FE42FBB6");
+            entity.HasKey(e => e.SN).HasName("PK__MemberTe__32151C64DCE92D6A");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.Tel).HasMaxLength(20);
@@ -148,12 +150,12 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.MemberTel)
                 .HasForeignKey(d => d.MemberID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MemberTel__Membe__3F466844");
+                .HasConstraintName("FK__MemberTel__Membe__440B1D61");
         });
 
         modelBuilder.Entity<Note>(entity =>
         {
-            entity.HasKey(e => e.NoteID).HasName("PK__Note__EACE357FDE760377");
+            entity.HasKey(e => e.NoteID).HasName("PK__Note__EACE357FBAFBC97B");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.OriginalArticle).HasMaxLength(500);
@@ -163,12 +165,12 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.JLPTLevel).WithMany(p => p.Note)
                 .HasForeignKey(d => d.JLPTLevelID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Note__JLPTLevelI__49C3F6B7");
+                .HasConstraintName("FK__Note__JLPTLevelI__4E88ABD4");
 
             entity.HasOne(d => d.Member).WithMany(p => p.Note)
                 .HasForeignKey(d => d.MemberID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Note__MemberID__4AB81AF0");
+                .HasConstraintName("FK__Note__MemberID__4F7CD00D");
 
             entity.HasMany(d => d.Word).WithMany(p => p.Note)
                 .UsingEntity<Dictionary<string, object>>(
@@ -176,20 +178,20 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                     r => r.HasOne<Word>().WithMany()
                         .HasForeignKey("WordID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__NoteWordM__WordI__4E88ABD4"),
+                        .HasConstraintName("FK__NoteWordM__WordI__534D60F1"),
                     l => l.HasOne<Note>().WithMany()
                         .HasForeignKey("NoteID")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__NoteWordM__NoteI__4D94879B"),
+                        .HasConstraintName("FK__NoteWordM__NoteI__52593CB8"),
                     j =>
                     {
-                        j.HasKey("NoteID", "WordID").HasName("PK__NoteWord__980C3A7B2396EF81");
+                        j.HasKey("NoteID", "WordID").HasName("PK__NoteWord__980C3A7B731F707E");
                     });
         });
 
         modelBuilder.Entity<PaymentRecord>(entity =>
         {
-            entity.HasKey(e => e.PaymentID).HasName("PK__PaymentR__9B556A585A6852FC");
+            entity.HasKey(e => e.PaymentID).HasName("PK__PaymentR__9B556A5806A7FD82");
 
             entity.Property(e => e.PaymentID).HasMaxLength(20);
             entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
@@ -199,24 +201,24 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.PaymentRecord)
                 .HasForeignKey(d => d.MemberID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PaymentRe__Membe__628FA481");
+                .HasConstraintName("FK__PaymentRe__Membe__656C112C");
 
             entity.HasOne(d => d.Plan).WithMany(p => p.PaymentRecord)
                 .HasForeignKey(d => d.PlanID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PaymentRe__PlanI__6383C8BA");
+                .HasConstraintName("FK__PaymentRe__PlanI__66603565");
         });
 
         modelBuilder.Entity<PlanStatus>(entity =>
         {
-            entity.HasKey(e => e.PlanStatusID).HasName("PK__PlanStat__007DABE3B5BEE0E1");
+            entity.HasKey(e => e.PlanStatusID).HasName("PK__PlanStat__007DABE3C428BE66");
 
             entity.Property(e => e.PlanStatusName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<QuestionInstance>(entity =>
         {
-            entity.HasKey(e => e.QuestionInstanceID).HasName("PK__Question__05FDF52FE0F485B4");
+            entity.HasKey(e => e.QuestionInstanceID).HasName("PK__Question__05FDF52FB21A51DE");
 
             entity.Property(e => e.QuestionInstanceID).HasMaxLength(10);
             entity.Property(e => e.AnswerOptionID).HasMaxLength(10);
@@ -226,12 +228,12 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.QuestionTemplate).WithMany(p => p.QuestionInstance)
                 .HasForeignKey(d => d.QuestionTemplateID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__QuestionI__Quest__5441852A");
+                .HasConstraintName("FK__QuestionI__Quest__59063A47");
         });
 
         modelBuilder.Entity<QuestionOption>(entity =>
         {
-            entity.HasKey(e => new { e.QuestionInstanceID, e.OptionID }).HasName("PK__Question__ECD18F3255989DB6");
+            entity.HasKey(e => new { e.QuestionInstanceID, e.OptionID }).HasName("PK__Question__ECD18F32610B33ED");
 
             entity.Property(e => e.QuestionInstanceID).HasMaxLength(10);
             entity.Property(e => e.OptionID).HasMaxLength(10);
@@ -240,12 +242,12 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.QuestionInstance).WithMany(p => p.QuestionOption)
                 .HasForeignKey(d => d.QuestionInstanceID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__QuestionO__Quest__571DF1D5");
+                .HasConstraintName("FK__QuestionO__Quest__5BE2A6F2");
         });
 
         modelBuilder.Entity<QuestionTemplate>(entity =>
         {
-            entity.HasKey(e => e.QuestionTemplateID).HasName("PK__Question__1AD09B2CF32A3157");
+            entity.HasKey(e => e.QuestionTemplateID).HasName("PK__Question__1AD09B2C79852D22");
 
             entity.Property(e => e.QuestionTemplateID).HasMaxLength(10);
             entity.Property(e => e.QuestionTemplate1)
@@ -256,12 +258,12 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Word).WithMany(p => p.QuestionTemplate)
                 .HasForeignKey(d => d.WordID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__QuestionT__WordI__5165187F");
+                .HasConstraintName("FK__QuestionT__WordI__5629CD9C");
         });
 
         modelBuilder.Entity<Record>(entity =>
         {
-            entity.HasKey(e => new { e.MemberID, e.QuestionInstanceID }).HasName("PK__Record__ECAF946AE30DC168");
+            entity.HasKey(e => new { e.MemberID, e.QuestionInstanceID }).HasName("PK__Record__ECAF946A5E94B557");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.QuestionInstanceID).HasMaxLength(10);
@@ -269,17 +271,17 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.Member).WithMany(p => p.Record)
                 .HasForeignKey(d => d.MemberID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Record__MemberID__59FA5E80");
+                .HasConstraintName("FK__Record__MemberID__5EBF139D");
 
             entity.HasOne(d => d.QuestionInstance).WithMany(p => p.Record)
                 .HasForeignKey(d => d.QuestionInstanceID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Record__Question__5AEE82B9");
+                .HasConstraintName("FK__Record__Question__5FB337D6");
         });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleID).HasName("PK__Role__8AFACE3A080FD143");
+            entity.HasKey(e => e.RoleID).HasName("PK__Role__8AFACE3A04E0DD75");
 
             entity.Property(e => e.RoleID).HasMaxLength(10);
             entity.Property(e => e.RoleName).HasMaxLength(40);
@@ -287,7 +289,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<SubscriptionPlan>(entity =>
         {
-            entity.HasKey(e => e.PlanID).HasName("PK__Subscrip__755C22D75F16443D");
+            entity.HasKey(e => e.PlanID).HasName("PK__Subscrip__755C22D70D47FA36");
 
             entity.Property(e => e.FeeInfo).HasMaxLength(100);
             entity.Property(e => e.PlanName).HasMaxLength(50);
@@ -295,7 +297,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<Word>(entity =>
         {
-            entity.HasKey(e => e.WordID).HasName("PK__Word__2C20F0465445FB84");
+            entity.HasKey(e => e.WordID).HasName("PK__Word__2C20F0465E82737A");
 
             entity.Property(e => e.PartOfSpeech).HasMaxLength(5);
             entity.Property(e => e.Word1)
@@ -306,7 +308,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.HasOne(d => d.JLPTLevel).WithMany(p => p.Word)
                 .HasForeignKey(d => d.JLPTLevelID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Word__JLPTLevelI__46E78A0C");
+                .HasConstraintName("FK__Word__JLPTLevelI__4BAC3F29");
         });
 
         OnModelCreatingPartial(modelBuilder);

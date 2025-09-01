@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<dbJapaneseLearnSystemContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("dbJapaneseLearnSystem")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("dbJapaneseLearnSystemConnection")));
 
 
 

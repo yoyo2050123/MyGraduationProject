@@ -1,0 +1,58 @@
+﻿@model JapaneseLearnSystem.Models.SubscriptionPlan
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>SubscriptionPlan</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PlanID" class="control-label"></label>
+                <input asp-for="PlanID" class="form-control" />
+                <span asp-validation-for="PlanID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PlanName" class="control-label"></label>
+                <input asp-for="PlanName" class="form-control" />
+                <span asp-validation-for="PlanName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FeeInfo" class="control-label"></label>
+                <input asp-for="FeeInfo" class="form-control" />
+                <span asp-validation-for="FeeInfo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DailyQuestionLimit" class="control-label"></label>
+                <input asp-for="DailyQuestionLimit" class="form-control" />
+                <span asp-validation-for="DailyQuestionLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LearnedWordLimit" class="control-label"></label>
+                <input asp-for="LearnedWordLimit" class="form-control" />
+                <span asp-validation-for="LearnedWordLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FavoriteLimit" class="control-label"></label>
+                <input asp-for="FavoriteLimit" class="form-control" />
+                <span asp-validation-for="FavoriteLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
