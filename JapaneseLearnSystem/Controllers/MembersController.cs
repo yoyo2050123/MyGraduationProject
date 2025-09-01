@@ -44,8 +44,10 @@ namespace JapaneseLearnSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+           
             if (ModelState.IsValid)
             {
+                Console.WriteLine("Register POST action called");
                 // 檢查 Email 是否已經被註冊 (這是正確的)
                 var existingMember = _context.MemberAccount.FirstOrDefault(m => m.Account == model.Email);
                 if (existingMember != null)
@@ -56,6 +58,8 @@ namespace JapaneseLearnSystem.Controllers
 
                 // 建立 MemberID
                 string newMemberId = "M" + DateTime.Now.ToString("yyMMddHHmmss");
+
+                
 
                 // 建立 Member 物件 (對應到 Member 資料表)
                 var member = new Member
@@ -123,11 +127,40 @@ namespace JapaneseLearnSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberID,Name,Tel,PlanID,Email,Birthday")] Member member)
         {
+
             if (ModelState.IsValid)
             {
-                _context.Add(member);
-                await _context.SaveChangesAsync();
+                // 取得資料庫裡最大 ID
+                var lastMember = await _context.Member
+                    .OrderByDescending(m => m.MemberID)
+                    .FirstOrDefaultAsync();
+
+                int newNumber = 1;
+                if (lastMember != null)
+                {
+                    // 取出數字部分並 +1
+                    string lastNumberStr = lastMember.MemberID.Substring(1); // 去掉字首 'A'
+                    newNumber = int.Parse(lastNumberStr) + 1;
+                }
+
+                // 組成新 MemberID，例如 A001、A002
+                member.MemberID = "A" + newNumber.ToString("D3"); // D3 表示補 0 到三位數
+
+                try
+                {
+                    _context.Add(member);
+                    await _context.SaveChangesAsync();
+                    Console.WriteLine("資料已成功寫入資料庫");
+                }
+                catch (DbUpdateException ex)
+                {
+                    Console.WriteLine("寫入資料庫失敗：" + ex.Message);
+                    // 可選：檢查內部例外 ex.InnerException
+                }
+                
+                
                 return RedirectToAction(nameof(Index));
+
             }
             ViewData["PlanID"] = new SelectList(_context.SubscriptionPlan, "PlanID", "PlanID", member.PlanID);
             return View(member);

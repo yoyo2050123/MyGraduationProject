@@ -8,7 +8,7 @@ public partial class Member
     public string MemberID { get; set; } = null!;
 
     public string Name { get; set; } = null!;
-
+    
     public string Tel { get; set; } = null!;
 
     public byte PlanID { get; set; }
