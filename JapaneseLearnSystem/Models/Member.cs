@@ -17,21 +17,20 @@ public partial class Member
 
     public DateOnly Birthday { get; set; }
 
-    public virtual ICollection<LearnRecordTable> LearnRecordTable { get; set; } = new List<LearnRecordTable>();
+    public virtual ICollection<LearnRecordTable>? LearnRecordTable { get; set; } 
 
-    public virtual ICollection<MemberAccount> MemberAccount { get; set; } = new List<MemberAccount>();
+    public virtual ICollection<MemberAccount>? MemberAccount { get; set; } 
+    public virtual ICollection<MemberPlan>? MemberPlan { get; set; }  
 
-    public virtual ICollection<MemberPlan> MemberPlan { get; set; } = new List<MemberPlan>();
+    public virtual ICollection<MemberTel>? MemberTel { get; set; } 
 
-    public virtual ICollection<MemberTel> MemberTel { get; set; } = new List<MemberTel>();
+    public virtual ICollection<Note>? Note { get; set; } 
 
-    public virtual ICollection<Note> Note { get; set; } = new List<Note>();
+    public virtual ICollection<PaymentRecord>? PaymentRecord { get; set; } 
 
-    public virtual ICollection<PaymentRecord> PaymentRecord { get; set; } = new List<PaymentRecord>();
+    public virtual SubscriptionPlan? Plan { get; set; }
 
-    public virtual SubscriptionPlan Plan { get; set; } = null!;
+    public virtual ICollection<Record>? Record { get; set; } 
 
-    public virtual ICollection<Record> Record { get; set; } = new List<Record>();
-
-    public virtual ICollection<Role> Role { get; set; } = new List<Role>();
+    public virtual ICollection<Role>? Role { get; set; } 
 }

@@ -4,10 +4,15 @@ namespace JapaneseLearnSystem.Models // 請確認這是你的專案命名空間
 {
     public class RegisterViewModel
     {
-        [Required(ErrorMessage = "請輸入帳號")]
+        [Required(ErrorMessage = "請輸入電子郵件")]
         [EmailAddress(ErrorMessage = "請輸入有效的 Email 格式")]
-        [Display(Name = "電子郵件 (帳號)")]
+        [Display(Name = "電子郵件")]
         public string Email { get; set; }
+
+        [Required(ErrorMessage ="請輸入帳號")]
+        [StringLength(100, ErrorMessage = "{0} 的長度至少必須為 {2} 個字元。", MinimumLength = 4)]
+        [Display(Name = "帳號")]
+        public string Account { get; set; }
 
         [Required(ErrorMessage = "請輸入密碼")]
         [StringLength(100, ErrorMessage = "{0} 的長度至少必須為 {2} 個字元。", MinimumLength = 6)]
@@ -15,9 +20,10 @@ namespace JapaneseLearnSystem.Models // 請確認這是你的專案命名空間
         [Display(Name = "密碼")]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)]
-        [Display(Name = "確認密碼")]
+        [Required(ErrorMessage = "請輸入確認密碼")]
+        [DataType(DataType.Password)] 
         [Compare("Password", ErrorMessage = "密碼和確認密碼不相符。")]
+        [Display(Name = "確認密碼")]
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "請輸入姓名")]

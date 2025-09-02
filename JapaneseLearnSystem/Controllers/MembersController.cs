@@ -44,22 +44,36 @@ namespace JapaneseLearnSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-           
+            ModelState.Remove("MemberID");
             if (ModelState.IsValid)
             {
+                
                 Console.WriteLine("Register POST action called");
                 // 檢查 Email 是否已經被註冊 (這是正確的)
-                var existingMember = _context.MemberAccount.FirstOrDefault(m => m.Account == model.Email);
+                var existingMember = _context.MemberAccount.FirstOrDefault(m => m.Account == model.Account);
                 if (existingMember != null)
                 {
                     ModelState.AddModelError(string.Empty, "這個 Email 已經被註冊過了。");
                     return View(model);
                 }
 
-                // 建立 MemberID
-                string newMemberId = "M" + DateTime.Now.ToString("yyMMddHHmmss");
+                // 取得資料庫裡最大 ID
+                var lastMember = await _context.Member
+                    .OrderByDescending(m => m.MemberID)
+                    .FirstOrDefaultAsync();
 
-                
+                int newNumber = 1;
+                if (lastMember != null)
+                {
+                    // 取出數字部分並 +1
+                    string lastNumberStr = lastMember.MemberID.Substring(1); // 去掉字首 'A'
+                    newNumber = int.Parse(lastNumberStr) + 1;
+                }
+
+                // 組成新 MemberID，例如 A001、A002
+                string newMemberId = "A" + newNumber.ToString("D3"); // D3 表示補 0 到三位數
+
+
 
                 // 建立 Member 物件 (對應到 Member 資料表)
                 var member = new Member
@@ -75,7 +89,7 @@ namespace JapaneseLearnSystem.Controllers
                 // 建立 MemberAccount 物件 (對應到 MemberAccount 資料表)
                 var memberAccount = new MemberAccount
                 {
-                    Account = model.Email,
+                    Account = model.Account,
                     Password = model.Password,
                     MemberID = newMemberId
                 };
@@ -127,7 +141,7 @@ namespace JapaneseLearnSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MemberID,Name,Tel,PlanID,Email,Birthday")] Member member)
         {
-
+            ModelState.Remove("MemberID");
             if (ModelState.IsValid)
             {
                 // 取得資料庫裡最大 ID
