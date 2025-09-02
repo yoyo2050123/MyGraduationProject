@@ -5,6 +5,7 @@ namespace JapaneseLearnSystem.Models;
 
 public partial class Member
 {
+
     public string MemberID { get; set; } = null!;
 
     public string Name { get; set; } = null!;

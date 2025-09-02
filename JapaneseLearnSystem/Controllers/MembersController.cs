@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using JapaneseLearnSystem.Models;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using JapaneseLearnSystem.Services;
 
 namespace JapaneseLearnSystem.Controllers
 {
     public class MembersController : Controller
     {
         private readonly dbJapaneseLearnSystemContext _context;
+        private readonly MemberIdGenerator _memberIdGenerator;
 
-        public MembersController(dbJapaneseLearnSystemContext context)
+        public MembersController(dbJapaneseLearnSystemContext context,MemberIdGenerator memberIdGenerator)
         {
             _context = context;
+            _memberIdGenerator = memberIdGenerator;
         }
 
 

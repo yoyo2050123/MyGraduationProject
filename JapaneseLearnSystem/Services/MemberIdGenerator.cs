@@ -14,18 +14,21 @@ namespace JapaneseLearnSystem.Services
 
         public async Task<string> GenerateAsync()
         {
+            // 取得資料庫裡最大 ID
             var lastMember = await _context.Member
                 .OrderByDescending(m => m.MemberID)
                 .FirstOrDefaultAsync();
 
-            int newNumber = 1;
+            // 取出數字部分並 +1
+            int newMemberId = 1;
             if (lastMember != null)
             {
                 string lastNumberStr = lastMember.MemberID.Substring(1);
-                newNumber = int.Parse(lastNumberStr) + 1;
+                newMemberId = int.Parse(lastNumberStr) + 1;
             }
 
-            return "A" + newNumber.ToString("D3");
+            // 組成新 MemberID，例如 A001、A002
+            return "A" + newMemberId.ToString("D3");
         }
     }
 
