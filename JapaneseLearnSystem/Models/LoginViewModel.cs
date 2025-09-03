@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace JapaneseLearnSystem.Models
 {
     [Keyless]
-    public class Login
+    public class LoginViewModel
     {
         
         [Required(ErrorMessage = "請輸入帳號")]   // 必填
