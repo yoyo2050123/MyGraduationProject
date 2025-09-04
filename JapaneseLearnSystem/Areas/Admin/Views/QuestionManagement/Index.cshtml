@@ -1,0 +1,53 @@
+﻿@model IEnumerable<JapaneseLearnSystem.Models.QuestionInstance>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AnswerOptionID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionTemplate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnswerOptionID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionTemplate.QuestionTemplateID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.QuestionInstanceID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.QuestionInstanceID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.QuestionInstanceID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
