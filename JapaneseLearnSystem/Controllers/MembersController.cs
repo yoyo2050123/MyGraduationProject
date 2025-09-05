@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using JapaneseLearnSystem.Models;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using JapaneseLearnSystem.Services;
+using BCrypt.Net;
 
 namespace JapaneseLearnSystem.Controllers
 {
@@ -50,11 +51,18 @@ namespace JapaneseLearnSystem.Controllers
             ModelState.Remove("MemberID");
             if (ModelState.IsValid)
             {
-                
+
                 Console.WriteLine("Register POST action called");
                 // 檢查 Email 是否已經被註冊 (這是正確的)
-                var existingMember = _context.MemberAccount.FirstOrDefault(m => m.Account == model.Account);
-                if (existingMember != null)
+                var existingAccount = _context.MemberAccount.FirstOrDefault(m => m.Account == model.Account);
+                var existingEmail = _context.Member.FirstOrDefault(m => m.Email == model.Email);
+                if (existingAccount != null)
+                {
+                    ModelState.AddModelError(string.Empty, "這個 帳號 已經被註冊過了。");
+                    return View(model);
+                }
+
+                if (existingEmail != null)
                 {
                     ModelState.AddModelError(string.Empty, "這個 Email 已經被註冊過了。");
                     return View(model);
@@ -76,10 +84,11 @@ namespace JapaneseLearnSystem.Controllers
                 // 組成新 MemberID，例如 A001、A002
                 string newMemberId = "A" + newNumber.ToString("D3"); // D3 表示補 0 到三位數
 
-
+                // 3) 雜湊密碼（不要明碼存！）
+                var hashed = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
                 // 建立 Member 物件 (對應到 Member 資料表)
-                var member = new Member
+                var member = new JapaneseLearnSystem.Models.Member
                 {
                     MemberID = newMemberId,
                     Name = model.Name,
@@ -111,168 +120,6 @@ namespace JapaneseLearnSystem.Controllers
             return View(model);
         }
 
-        // GET: Members/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var member = await _context.Member
-                .Include(m => m.Plan)
-                .FirstOrDefaultAsync(m => m.MemberID == id);
-            if (member == null)
-            {
-                return NotFound();
-            }
-
-            return View(member);
-        }
-
-        // GET: Members/Create
-        public IActionResult Create()
-        {
-            ViewData["PlanID"] = new SelectList(_context.SubscriptionPlan, "PlanID", "PlanID");
-            return View();
-        }
-
-        // POST: Members/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MemberID,Name,Tel,PlanID,Email,Birthday")] Member member)
-        {
-            ModelState.Remove("MemberID");
-            if (ModelState.IsValid)
-            {
-                // 取得資料庫裡最大 ID
-                var lastMember = await _context.Member
-                    .OrderByDescending(m => m.MemberID)
-                    .FirstOrDefaultAsync();
-
-                int newNumber = 1;
-                if (lastMember != null)
-                {
-                    // 取出數字部分並 +1
-                    string lastNumberStr = lastMember.MemberID.Substring(1); // 去掉字首 'A'
-                    newNumber = int.Parse(lastNumberStr) + 1;
-                }
-
-                // 組成新 MemberID，例如 A001、A002
-                member.MemberID = "A" + newNumber.ToString("D3"); // D3 表示補 0 到三位數
-
-                try
-                {
-                    _context.Add(member);
-                    await _context.SaveChangesAsync();
-                    Console.WriteLine("資料已成功寫入資料庫");
-                }
-                catch (DbUpdateException ex)
-                {
-                    Console.WriteLine("寫入資料庫失敗：" + ex.Message);
-                    // 可選：檢查內部例外 ex.InnerException
-                }
-                
-                
-                return RedirectToAction(nameof(Index));
-
-            }
-            ViewData["PlanID"] = new SelectList(_context.SubscriptionPlan, "PlanID", "PlanID", member.PlanID);
-            return View(member);
-        }
-
-        // GET: Members/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var member = await _context.Member.FindAsync(id);
-            if (member == null)
-            {
-                return NotFound();
-            }
-            ViewData["PlanID"] = new SelectList(_context.SubscriptionPlan, "PlanID", "PlanID", member.PlanID);
-            return View(member);
-        }
-
-        // POST: Members/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MemberID,Name,Tel,PlanID,Email,Birthday")] Member member)
-        {
-            if (id != member.MemberID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(member);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MemberExists(member.MemberID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PlanID"] = new SelectList(_context.SubscriptionPlan, "PlanID", "PlanID", member.PlanID);
-            return View(member);
-        }
-
-        // GET: Members/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var member = await _context.Member
-                .Include(m => m.Plan)
-                .FirstOrDefaultAsync(m => m.MemberID == id);
-            if (member == null)
-            {
-                return NotFound();
-            }
-
-            return View(member);
-        }
-
-        // POST: Members/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var member = await _context.Member.FindAsync(id);
-            if (member != null)
-            {
-                _context.Member.Remove(member);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool MemberExists(string id)
-        {
-            return _context.Member.Any(e => e.MemberID == id);
-        }
     }
 }

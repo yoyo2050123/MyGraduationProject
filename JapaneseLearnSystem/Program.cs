@@ -52,6 +52,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// 1. 先註冊特殊路由
+//多層次路由
+
 
 app.MapAreaControllerRoute(
     name : "AdminArea",
