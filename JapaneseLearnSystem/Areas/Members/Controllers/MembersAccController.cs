@@ -1,17 +1,26 @@
 ﻿using JapaneseLearnSystem.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using JapaneseLearnSystem.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Security.Claims;
+using BCrypt.Net;
+
 
 namespace JapaneseLearnSystem.Areas.Members.Controllers
 {
-    public class MembersController : Controller
+    [Area("Members")]
+    public class MembersAccController : Controller
     {
 
         private readonly dbJapaneseLearnSystemContext _context;
-        public IActionResult Index()
+
+        public MembersAccController(dbJapaneseLearnSystemContext context)
         {
-            return View();
+            _context = context;
         }
 
         // 請將這兩個 Action 方法複製到你的 MembersController 類別裡面
@@ -36,8 +45,15 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
 
                 Console.WriteLine("Register POST action called");
                 // 檢查 Email 是否已經被註冊 (這是正確的)
-                var existingMember = _context.MemberAccount.FirstOrDefault(m => m.Account == model.Account);
-                if (existingMember != null)
+                var existingAccount = _context.MemberAccount.FirstOrDefault(m => m.Account == model.Account);
+                var existingEmail = _context.Member.FirstOrDefault(m => m.Email == model.Email);
+                if (existingAccount != null)
+                {
+                    ModelState.AddModelError(string.Empty, "這個 帳號 已經被註冊過了。");
+                    return View(model);
+                }
+
+                if (existingEmail != null)
                 {
                     ModelState.AddModelError(string.Empty, "這個 Email 已經被註冊過了。");
                     return View(model);
@@ -59,7 +75,8 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
                 // 組成新 MemberID，例如 A001、A002
                 string newMemberId = "A" + newNumber.ToString("D3"); // D3 表示補 0 到三位數
 
-
+                // 3) 雜湊密碼（不要明碼存！）
+                var hashed = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
                 // 建立 Member 物件 (對應到 Member 資料表)
                 var member = new JapaneseLearnSystem.Models.Member
@@ -93,5 +110,13 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
             // 如果資料驗證失敗，回到原本的註冊頁面並顯示錯誤訊息
             return View(model);
         }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+        
+
+
     }
 }

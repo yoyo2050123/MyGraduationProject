@@ -23,13 +23,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>                           
+                        </li>                      
                     </ul>
+                    @await Html.PartialAsync("_LoginPartial")
                 </div>
             </div>
         </nav>
     </header>
+    @* 這個 Partial 專門負責導覽列右邊的登入區塊 *@
+    @* 未登入：顯示「註冊」「登入」；已登入：顯示「你好，用戶名」與「登出」 *@
+
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -45,6 +51,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- 加上這兩行 -->
+
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/jquery-validation/dist/localization/messages_zh_TW.js"></script>
