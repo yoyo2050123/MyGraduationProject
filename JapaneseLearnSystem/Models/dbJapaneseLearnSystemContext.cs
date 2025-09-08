@@ -6,8 +6,6 @@ namespace JapaneseLearnSystem.Models;
 
 public partial class dbJapaneseLearnSystemContext : DbContext
 {
-    
-
     public dbJapaneseLearnSystemContext(DbContextOptions<dbJapaneseLearnSystemContext> options)
         : base(options)
     {
@@ -24,6 +22,8 @@ public partial class dbJapaneseLearnSystemContext : DbContext
     public virtual DbSet<MemberPlan> MemberPlan { get; set; }
 
     public virtual DbSet<MemberTel> MemberTel { get; set; }
+
+    public virtual DbSet<MemberRole> MemberRole { get; set; }
 
     public virtual DbSet<Note> Note { get; set; }
 

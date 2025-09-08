@@ -50,6 +50,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// 加這行！！
+app.UseAuthentication();
+
+
 app.UseAuthorization();
 
 // 1. 先註冊特殊路由
