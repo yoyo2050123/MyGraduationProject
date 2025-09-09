@@ -25,8 +25,11 @@ builder.Services.AddScoped<MemberIdGenerator>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-
 builder.Services.AddDbContext<dbJapaneseLearnSystemContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("dbJapaneseLearnSystemConnection")));
+
+
+builder.Services.AddDbContext<dbJapaneseLearnSystemContextG2>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbJapaneseLearnSystemConnection")));
 
 

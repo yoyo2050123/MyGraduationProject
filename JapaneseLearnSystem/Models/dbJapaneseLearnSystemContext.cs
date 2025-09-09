@@ -21,9 +21,9 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
     public virtual DbSet<MemberPlan> MemberPlan { get; set; }
 
-    public virtual DbSet<MemberTel> MemberTel { get; set; }
-
     public virtual DbSet<MemberRole> MemberRole { get; set; }
+
+    public virtual DbSet<MemberTel> MemberTel { get; set; }
 
     public virtual DbSet<Note> Note { get; set; }
 
@@ -82,24 +82,6 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                 .HasForeignKey(d => d.PlanID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Member__PlanID__3B75D760");
-
-            entity.HasMany(d => d.Role).WithMany(p => p.Member)
-                .UsingEntity<Dictionary<string, object>>(
-                    "MemberRole",
-                    r => r.HasOne<Role>().WithMany()
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__MemberRol__RoleI__412EB0B6"),
-                    l => l.HasOne<Member>().WithMany()
-                        .HasForeignKey("MemberID")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__MemberRol__Membe__403A8C7D"),
-                    j =>
-                    {
-                        j.HasKey("MemberID", "RoleID").HasName("PK__MemberRo__B45FE7DB387981C7");
-                        j.IndexerProperty<string>("MemberID").HasMaxLength(10);
-                        j.IndexerProperty<string>("RoleID").HasMaxLength(10);
-                    });
         });
 
         modelBuilder.Entity<MemberAccount>(entity =>
@@ -138,6 +120,27 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                 .HasForeignKey(d => d.PlanStatusID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__MemberPla__PlanS__6B24EA82");
+        });
+
+        modelBuilder.Entity<MemberRole>(entity =>
+        {
+            entity.HasKey(e => new { e.MemberID, e.RoleID }).HasName("PK__MemberRo__B45FE7DB387981C7");
+
+            entity.Property(e => e.MemberID).HasMaxLength(10);
+            entity.Property(e => e.RoleID).HasMaxLength(10);
+            entity.Property(e => e.Empty)
+                .HasMaxLength(10)
+                .IsFixedLength();
+
+            entity.HasOne(d => d.Member).WithMany(p => p.MemberRole)
+                .HasForeignKey(d => d.MemberID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__MemberRol__Membe__403A8C7D");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.MemberRole)
+                .HasForeignKey(d => d.RoleID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__MemberRol__RoleI__412EB0B6");
         });
 
         modelBuilder.Entity<MemberTel>(entity =>

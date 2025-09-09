@@ -21,7 +21,5 @@ public partial class SubscriptionPlan
 
     public virtual ICollection<MemberPlan> MemberPlan { get; set; } = new List<MemberPlan>();
 
-
-
     public virtual ICollection<PaymentRecord> PaymentRecord { get; set; } = new List<PaymentRecord>();
 }

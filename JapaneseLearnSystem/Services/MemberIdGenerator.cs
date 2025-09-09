@@ -5,9 +5,9 @@ namespace JapaneseLearnSystem.Services
 {
     public class MemberIdGenerator
     {
-        private readonly dbJapaneseLearnSystemContext _context;
+        private readonly dbJapaneseLearnSystemContextG2 _context;
 
-        public MemberIdGenerator(dbJapaneseLearnSystemContext context)
+        public MemberIdGenerator(dbJapaneseLearnSystemContextG2 context)
         {
             _context = context;
         }

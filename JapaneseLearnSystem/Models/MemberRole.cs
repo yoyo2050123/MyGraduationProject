@@ -5,10 +5,13 @@ namespace JapaneseLearnSystem.Models;
 
 public partial class MemberRole
 {
-    public string? MemberId { get; set; } = null!;
+    public string MemberID { get; set; } = null!;
 
-    public string? RoleId { get; set; } = null!;
+    public string RoleID { get; set; } = null!;
 
-    public virtual MemberAccount MemberAccount { get; set; }
-    public virtual Role Role { get; set; }
+    public string? Empty { get; set; }
+
+    public virtual Member Member { get; set; } = null!;
+
+    public virtual Role Role { get; set; } = null!;
 }

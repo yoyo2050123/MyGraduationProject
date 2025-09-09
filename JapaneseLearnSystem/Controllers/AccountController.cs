@@ -9,9 +9,9 @@ namespace JapaneseLearnSystem.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly dbJapaneseLearnSystemContext _context;
+        private readonly dbJapaneseLearnSystemContextG2 _context;
 
-        public AccountController(dbJapaneseLearnSystemContext context)
+        public AccountController(dbJapaneseLearnSystemContextG2 context)
         {
             _context = context;
         }
@@ -43,13 +43,15 @@ namespace JapaneseLearnSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                // 查詢帳號
-                var user = _context.MemberAccount
-                .Include(ma => ma.MemberRoles)      // 中介表
-                .ThenInclude(mr => mr.Role)         // 取得角色
-                .FirstOrDefault(ma => ma.Account == model.Account);
 
-                if (user != null && BCrypt.Net.BCrypt.Verify(model.Password,user.Password))
+
+                var user = _context.MemberAccount
+                    .Include(ma => ma.Member)
+                        .ThenInclude(m => m.MemberRole)   // 經由 Member 拿到 MemberRole
+                            .ThenInclude(mr => mr.Role)   // 再取 Role
+                    .FirstOrDefault(ma => ma.Account == model.Account);
+
+                if (user != null && BCrypt.Net.BCrypt.Verify(model.Password, user.Password))
                 {
                     // 建立 Claims
                     var claims = new List<Claim>
@@ -58,7 +60,15 @@ namespace JapaneseLearnSystem.Controllers
                         new Claim("MemberID", user.MemberID)
                     };
 
+                    // 🚀 把角色寫進 Claims
+                    // 加入角色 Claim
+                    foreach (var memberRole in user.Member.MemberRole)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, memberRole.Role.RoleName));
+                    }
+
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
 
                     await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
@@ -66,9 +76,16 @@ namespace JapaneseLearnSystem.Controllers
                     );
 
                     TempData["Message"] = "登入成功！";
+
                     if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
 
+                    // 如果是管理員，直接進入後台
+                    if (user.Member.MemberRole.Any(mr => mr.Role.RoleName == "管理員"))
+                        return RedirectToAction("Details", "MemberManagements", new { area = "Admin" });
+
+
+                    // 其他人進入首頁
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -76,7 +93,7 @@ namespace JapaneseLearnSystem.Controllers
                     TempData["LoginError"] = "帳號或密碼錯誤！";
                     return View(model);
                 }
-                
+
             }
                 
             return View(model);
@@ -160,6 +177,21 @@ namespace JapaneseLearnSystem.Controllers
                 // 將兩個物件都加入到資料庫追蹤中
                 _context.Member.Add(member);
                 _context.MemberAccount.Add(memberAccount);
+
+                // ---------------------------
+                // 在這裡建立 MemberRole
+                var defaultRole = await _context.Role.FirstOrDefaultAsync(r => r.RoleName == "一般會員");
+
+                if (defaultRole != null)
+                {
+                    var memberRole = new MemberRole
+                    {
+                        MemberID = newMemberId,
+                        RoleID = defaultRole.RoleID
+                    };
+                    _context.MemberRole.Add(memberRole); // 👈 別忘了這行
+                }
+
 
                 // 一次性儲存所有變更
                 await _context.SaveChangesAsync();

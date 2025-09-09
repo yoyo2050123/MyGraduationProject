@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace JapaneseLearnSystem.Models;
@@ -24,9 +23,9 @@ public partial class Member
 
     public virtual ICollection<MemberPlan> MemberPlan { get; set; } = new List<MemberPlan>();
 
-    public virtual ICollection<MemberTel> MemberTel { get; set; } = new List<MemberTel>();
-
     public virtual ICollection<MemberRole> MemberRole { get; set; } = new List<MemberRole>();
+
+    public virtual ICollection<MemberTel> MemberTel { get; set; } = new List<MemberTel>();
 
     public virtual ICollection<Note> Note { get; set; } = new List<Note>();
 
@@ -35,6 +34,4 @@ public partial class Member
     public virtual SubscriptionPlan Plan { get; set; } = null!;
 
     public virtual ICollection<Record> Record { get; set; } = new List<Record>();
-
-    public virtual ICollection<Role> Role { get; set; } = new List<Role>();
 }

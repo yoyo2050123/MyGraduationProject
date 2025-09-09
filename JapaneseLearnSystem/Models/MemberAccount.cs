@@ -12,6 +12,4 @@ public partial class MemberAccount
     public string MemberID { get; set; } = null!;
 
     public virtual Member Member { get; set; } = null!;
-
-    public virtual ICollection<MemberRole> MemberRoles { get; set; } = new List<MemberRole>();
 }

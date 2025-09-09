@@ -12,9 +12,9 @@ namespace JapaneseLearnSystem.Areas.Admin.Controllers
     [Area("Admin")]
     public class QuestionManagementsController : Controller
     {
-        private readonly dbJapaneseLearnSystemContext _context;
+        private readonly dbJapaneseLearnSystemContextG2 _context;
 
-        public QuestionManagementsController(dbJapaneseLearnSystemContext context)
+        public QuestionManagementsController(dbJapaneseLearnSystemContextG2 context)
         {
             _context = context;
         }

@@ -14,10 +14,10 @@ namespace JapaneseLearnSystem.Controllers
 {
     public class MembersController : Controller
     {
-        private readonly dbJapaneseLearnSystemContext _context;
+        private readonly dbJapaneseLearnSystemContextG2 _context;
         private readonly MemberIdGenerator _memberIdGenerator;
 
-        public MembersController(dbJapaneseLearnSystemContext context,MemberIdGenerator memberIdGenerator)
+        public MembersController(dbJapaneseLearnSystemContextG2 context,MemberIdGenerator memberIdGenerator)
         {
             _context = context;
             _memberIdGenerator = memberIdGenerator;

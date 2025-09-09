@@ -11,9 +11,9 @@ namespace JapaneseLearnSystem.Controllers
 {
     public class SubscriptionPlansController : Controller
     {
-        private readonly dbJapaneseLearnSystemContext _context;
+        private readonly dbJapaneseLearnSystemContextG2 _context;
 
-        public SubscriptionPlansController(dbJapaneseLearnSystemContext context)
+        public SubscriptionPlansController(dbJapaneseLearnSystemContextG2 context)
         {
             _context = context;
         }
