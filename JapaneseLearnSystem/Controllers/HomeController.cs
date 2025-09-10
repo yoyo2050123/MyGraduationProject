@@ -39,3 +39,4 @@ namespace JapaneseLearnSystem.Controllers
 //_ViewStart.cshtml要放在Views資料夾裡面那層，不要放進去Shared資料夾裡面
 //資料中介表格的命名規則是兩個資料表名稱中間用底線連接起來，然後兩個資料表名稱都要用複數形式
 //資料中介表要Scaffold的話要注意，因為他沒有辦法手動去修改，所以要多建立一個空白的欄位來讓它變成實體，這樣Scaffold才會能夠手動操作這個表格
+//如果資料沒有修改成功記得用Debug工具看資料流

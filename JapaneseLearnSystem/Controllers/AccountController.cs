@@ -82,7 +82,7 @@ namespace JapaneseLearnSystem.Controllers
 
                     // 如果是管理員，直接進入後台
                     if (user.Member.MemberRole.Any(mr => mr.Role.RoleName == "管理員"))
-                        return RedirectToAction("Details", "MemberManagements", new { area = "Admin" });
+                        return RedirectToAction("Index", "MemberManagements", new { area = "Admin" });
 
 
                     // 其他人進入首頁
