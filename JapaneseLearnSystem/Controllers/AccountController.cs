@@ -86,7 +86,7 @@ namespace JapaneseLearnSystem.Controllers
 
 
                     // 其他人進入首頁
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "MemberCenter", new { area = "Members" });
                 }
                 else
                 {
@@ -95,7 +95,7 @@ namespace JapaneseLearnSystem.Controllers
                 }
 
             }
-                
+
             return View(model);
         }
 

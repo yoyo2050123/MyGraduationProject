@@ -1,5 +1,26 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "會員首頁";
 }
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4">歡迎來到日文學習系統！</h1>
+            <p class="lead mt-3">
+                這裡是會員專區，您可以查看學習進度、單字筆記以及其他功能。
+            </p>
+
+            @* 如果想顯示使用者名稱 *@
+            @if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                <p class="mt-4">こんにちは，<strong>@User.Identity.Name</strong> さん！</p>
+            }
+
+            @* 可以放一些按鈕快速進入會員功能頁面 *@
+            <div class="mt-4">
+                <a class="btn btn-primary btn-lg me-2" asp-controller="MemberCenter" asp-action="Vocabulary">單字筆記</a>
+                <a class="btn btn-success btn-lg" asp-controller="MemberCenter" asp-action="Progress">學習進度</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,29 +11,11 @@
             <span class="nav-link">こんにちは、@User.Identity!.Name さん</span>
         </li>
 
-        @* 如果使用者擁有管理員角色，顯示管理員後台連結 *@
-        @if (User.IsInRole("管理員"))
-        {
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Admin" asp-controller="MemberManagements" asp-action="Index">管理員後台</a>
-            </li>
-        }
-        @* 如果使用者擁有會員角色，顯示會員專區連結 *@
-        @if (User.IsInRole("一般會員") || User.IsInRole("付費會員"))
-        {
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Members" asp-controller="MemberCenter" asp-action="Profile">會員專區
-                    @* 如果是付費會員，可額外顯示標籤 *@
-                    @if (User.IsInRole("付費會員"))
-                    {
-                        <span class="badge bg-warning text-dark ms-1">付費會員</span>
-                    }
-                </a>
-            </li>
-        }
+
+
         <li class="nav-item">
             @* 登出要用 POST + AntiForgery，比較安全 *@
-            <form class="d-inline" asp-controller="Account" asp-action="Logout" method="post">
+            <form class="d-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn-outline-secondary btn-sm">登出</button>
             </form>
@@ -43,10 +25,10 @@
     {
         @* ------------------- 未登入狀態 ------------------- *@
         <li class="nav-item">
-            <a class="nav-link" asp-controller="Account" asp-action="Register">註冊</a>
+            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">註冊</a>
         </li>
         <li class="nav-item">
-            <a class="btn btn-primary btn-sm ms-2" asp-controller="Account" asp-action="Login">登入</a>
+            <a class="btn btn-primary btn-sm ms-2" asp-area="" asp-controller="Account" asp-action="Login">登入</a>
         </li>
     }
 </ul>

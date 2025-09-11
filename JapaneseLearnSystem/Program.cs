@@ -71,7 +71,7 @@ app.MapAreaControllerRoute(
 app.MapAreaControllerRoute(
     name: "MembersArea",
     areaName: "Members",
-    pattern: "Members/{controller=Members}/{action=Index}/{id?}");
+    pattern: "Members/{controller=MemberCenterController}/{action=Index}/{id?}");
 
 
 

@@ -40,3 +40,9 @@ namespace JapaneseLearnSystem.Controllers
 //資料中介表格的命名規則是兩個資料表名稱中間用底線連接起來，然後兩個資料表名稱都要用複數形式
 //資料中介表要Scaffold的話要注意，因為他沒有辦法手動去修改，所以要多建立一個空白的欄位來讓它變成實體，這樣Scaffold才會能夠手動操作這個表格
 //如果資料沒有修改成功記得用Debug工具看資料流
+
+//Post是表單submit(表單送出) Get從後端抓資料
+//所有關聯資料表(Model裡面有virtual)不得為必填
+//public virtual SubscriptionPlan? Plan { get; set; } = null!; 
+//在程式碼的最後面加上= null!;就是必填或是在class上面一行增加[Required]
+//public virtual SubscriptionPlan? Plan { get; set; } 在class(SubscriptionPlan)加上? 就是非必填

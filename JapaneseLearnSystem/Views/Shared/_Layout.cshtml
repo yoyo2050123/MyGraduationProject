@@ -24,7 +24,28 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>                           
-                        </li>                      
+                        </li>
+                        @* 如果使用者擁有管理員角色，顯示管理員後台連結 *@
+                        @if (User.IsInRole("管理員"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Admin" asp-controller="MemberManagements" asp-action="Index">管理員後台</a>
+                            </li>
+                        }
+                        @* 如果使用者擁有會員角色，顯示會員專區連結 *@
+                        @if (User.IsInRole("一般會員") || User.IsInRole("付費會員"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="Members" asp-controller="MemberCenter" asp-action="Index">
+                                    會員專區
+                                    @* 如果是付費會員，可額外顯示標籤 *@
+                                    @if (User.IsInRole("付費會員"))
+                                    {
+                                        <span class="badge bg-warning text-dark ms-1">付費會員</span>
+                                    }
+                                </a>
+                            </li>
+                        }
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
                 </div>
