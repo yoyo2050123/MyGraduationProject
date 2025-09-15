@@ -1,0 +1,24 @@
+﻿@using JapaneseLearnSystem.Areas.Members.Models
+@model List<QuestionPage>
+
+<h2>請作答</h2>
+
+<form asp-action="SubmitAnswers" method="post">
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        <div>
+            <p>@Model[i].QuestionContent</p>
+            @foreach (var option in Model[i].Options)
+            {
+                <input type="radio"
+                       asp-for="@Model[i].SelectedOptionID"
+                       value="@option.OptionID"
+                       id="@Model[i].QuestionInstanceID@option.OptionID" />
+                <label for="@Model[i].QuestionInstanceID@option.OptionID">@option.OptionContent</label>
+            }
+        </div>
+        <hr />
+    }
+
+    <button type="submit">提交答案</button>
+</form>

@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "選擇題數";
+}
+
+<h2>選擇練習題數</h2>
+
+<form asp-action="GenerateQuestions" method="post">
+    <div class="mb-3">
+        <label for="count" class="form-label">請輸入想練習的題目數：</label>
+        <input type="number" class="form-control" id="count" name="count" min="1" max="20" required />
+    </div>
+    <button type="submit" class="btn btn-primary">開始練習</button>
+</form>

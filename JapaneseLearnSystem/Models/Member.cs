@@ -13,7 +13,7 @@ public partial class Member
 
     public string Tel { get; set; } = null!;
 
-    public byte PlanID { get; set; } 
+    public byte PlanID { get; set; }
 
     public string Email { get; set; } = null!;
 

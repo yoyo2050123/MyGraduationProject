@@ -46,3 +46,4 @@ namespace JapaneseLearnSystem.Controllers
 //public virtual SubscriptionPlan? Plan { get; set; } = null!; 
 //在程式碼的最後面加上= null!;就是必填或是在class上面一行增加[Required]
 //public virtual SubscriptionPlan? Plan { get; set; } 在class(SubscriptionPlan)加上? 就是非必填
+//如果要寫重新Scaffold 資料庫 記得先備份Member.Model資料庫 之後Scaffold完再把資料複寫

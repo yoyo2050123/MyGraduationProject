@@ -15,9 +15,11 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         public IActionResult LearanReport()
         {
             return View();
+
+
         }
 
-        public IActionResult Practice()
+        public IActionResult PracticePrepare()
         {
             return View();
         }

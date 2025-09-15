@@ -17,6 +17,8 @@ public partial class Note
 
     public string MemberID { get; set; } = null!;
 
+    public string? Reading { get; set; }
+
     public virtual JLPTLevel JLPTLevel { get; set; } = null!;
 
     public virtual Member Member { get; set; } = null!;

@@ -160,6 +160,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.OriginalArticle).HasMaxLength(500);
+            entity.Property(e => e.Reading).HasMaxLength(50);
             entity.Property(e => e.Title).HasMaxLength(10);
             entity.Property(e => e.Translate).HasMaxLength(500);
 
@@ -230,6 +231,11 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                 .HasForeignKey(d => d.QuestionTemplateID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__QuestionI__Quest__59063A47");
+
+            entity.HasOne(d => d.Word).WithMany(p => p.QuestionInstance)
+                .HasForeignKey(d => d.WordID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_QuestionInstance_Word");
         });
 
         modelBuilder.Entity<QuestionOption>(entity =>
@@ -255,11 +261,6 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("QuestionTemplate");
             entity.Property(e => e.QuestionType).HasMaxLength(100);
-
-            entity.HasOne(d => d.Word).WithMany(p => p.QuestionTemplate)
-                .HasForeignKey(d => d.WordID)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__QuestionT__WordI__5629CD9C");
         });
 
         modelBuilder.Entity<Record>(entity =>
@@ -300,7 +301,8 @@ public partial class dbJapaneseLearnSystemContext : DbContext
         {
             entity.HasKey(e => e.WordID).HasName("PK__Word__2C20F046BA3BD3D8");
 
-            entity.Property(e => e.PartOfSpeech).HasMaxLength(5);
+            entity.Property(e => e.PartOfSpeech).HasMaxLength(50);
+            entity.Property(e => e.Reading).HasMaxLength(50);
             entity.Property(e => e.Word1)
                 .HasMaxLength(20)
                 .HasColumnName("Word");
