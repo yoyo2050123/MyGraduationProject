@@ -12,12 +12,28 @@ namespace JapaneseLearnSystem.Areas.Admin.Controllers
     [Area("Admin")]
     public class QuestionManagementsController : Controller
     {
+        private readonly QuestionGenerate _questionGenerate;
         private readonly dbJapaneseLearnSystemContextG2 _context;
 
-        public QuestionManagementsController(dbJapaneseLearnSystemContextG2 context)
+        public QuestionManagementsController(dbJapaneseLearnSystemContextG2 context,QuestionGenerate questionGenerate)
         {
             _context = context;
+            _questionGenerate = questionGenerate;
         }
+        
+
+       public async Task<IActionResult> QuestionCreate()
+        {
+            var (generatedCount, messages) = await _questionGenerate.GenerateMultipleQuestionsAsync(10);
+            // 你可以將 generatedCount 和 messages 傳到 View
+            ViewBag.GeneratedCount = generatedCount;
+            ViewBag.Messages = messages;
+            return View();
+        }
+
+
+
+
 
         // GET: Admin/QuestionManagement
         public async Task<IActionResult> Index()

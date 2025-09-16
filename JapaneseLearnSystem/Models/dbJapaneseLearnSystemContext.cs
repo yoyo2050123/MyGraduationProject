@@ -49,7 +49,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
     {
         modelBuilder.Entity<JLPTLevel>(entity =>
         {
-            entity.HasKey(e => e.JLPTLevelID).HasName("PK__JLPTLeve__8536E555D10950D5");
+            entity.HasKey(e => e.JLPTLevelID).HasName("PK__JLPTLeve__8536E555809D8E11");
 
             entity.Property(e => e.Description).HasMaxLength(50);
             entity.Property(e => e.JLPTLevelName).HasMaxLength(2);
@@ -57,7 +57,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<LearnRecordTable>(entity =>
         {
-            entity.HasKey(e => e.RecordID).HasName("PK__LearnRec__FBDF78C95E8D6C23");
+            entity.HasKey(e => e.RecordID).HasName("PK__LearnRec__FBDF78C91F4EF015");
 
             entity.Property(e => e.RecordID).HasMaxLength(10);
             entity.Property(e => e.Accuracy).HasColumnType("decimal(5, 2)");
@@ -71,7 +71,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<Member>(entity =>
         {
-            entity.HasKey(e => e.MemberID).HasName("PK__Member__0CF04B38EDAA55FF");
+            entity.HasKey(e => e.MemberID).HasName("PK__Member__0CF04B3852D65049");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.Email).HasMaxLength(100);
@@ -86,7 +86,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<MemberAccount>(entity =>
         {
-            entity.HasKey(e => e.Account).HasName("PK__MemberAc__B0C3AC4745C57E23");
+            entity.HasKey(e => e.Account).HasName("PK__MemberAc__B0C3AC47E246B3F0");
 
             entity.Property(e => e.Account).HasMaxLength(50);
             entity.Property(e => e.MemberID).HasMaxLength(10);
@@ -100,7 +100,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<MemberPlan>(entity =>
         {
-            entity.HasKey(e => e.MemberPlanID).HasName("PK__MemberPl__F266CFF4AF013909");
+            entity.HasKey(e => e.MemberPlanID).HasName("PK__MemberPl__F266CFF45614CB1B");
 
             entity.Property(e => e.MemberPlanID).HasMaxLength(50);
             entity.Property(e => e.MemberID).HasMaxLength(10);
@@ -124,11 +124,13 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<MemberRole>(entity =>
         {
-            entity.HasKey(e => new { e.MemberID, e.RoleID }).HasName("PK__MemberRo__B45FE7DBCD6B284B");
+            entity.HasKey(e => new { e.MemberID, e.RoleID }).HasName("PK__MemberRo__B45FE7DB14D20BB9");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.RoleID).HasMaxLength(10);
-            entity.Property(e => e.Empty).HasMaxLength(50);
+            entity.Property(e => e.Empty)
+                .HasMaxLength(10)
+                .IsFixedLength();
 
             entity.HasOne(d => d.Member).WithMany(p => p.MemberRole)
                 .HasForeignKey(d => d.MemberID)
@@ -143,7 +145,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<MemberTel>(entity =>
         {
-            entity.HasKey(e => e.SN).HasName("PK__MemberTe__32151C642A762739");
+            entity.HasKey(e => e.SN).HasName("PK__MemberTe__32151C64182120EC");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.Tel).HasMaxLength(20);
@@ -156,11 +158,11 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<Note>(entity =>
         {
-            entity.HasKey(e => e.NoteID).HasName("PK__Note__EACE357F52FB1FB9");
+            entity.HasKey(e => e.NoteID).HasName("PK__Note__EACE357FF387097F");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
             entity.Property(e => e.OriginalArticle).HasMaxLength(500);
-            entity.Property(e => e.Reading).HasMaxLength(50);
+            entity.Property(e => e.Reading).HasMaxLength(100);
             entity.Property(e => e.Title).HasMaxLength(10);
             entity.Property(e => e.Translate).HasMaxLength(500);
 
@@ -187,13 +189,13 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                         .HasConstraintName("FK__NoteWordM__NoteI__52593CB8"),
                     j =>
                     {
-                        j.HasKey("NoteID", "WordID").HasName("PK__NoteWord__980C3A7B1F3F4A7D");
+                        j.HasKey("NoteID", "WordID").HasName("PK__NoteWord__980C3A7B476AF300");
                     });
         });
 
         modelBuilder.Entity<PaymentRecord>(entity =>
         {
-            entity.HasKey(e => e.PaymentID).HasName("PK__PaymentR__9B556A587FC4CFD1");
+            entity.HasKey(e => e.PaymentID).HasName("PK__PaymentR__9B556A58E9F6DDF2");
 
             entity.Property(e => e.PaymentID).HasMaxLength(20);
             entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
@@ -213,16 +215,16 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<PlanStatus>(entity =>
         {
-            entity.HasKey(e => e.PlanStatusID).HasName("PK__PlanStat__007DABE3C26C66F0");
+            entity.HasKey(e => e.PlanStatusID).HasName("PK__PlanStat__007DABE31DA1E798");
 
             entity.Property(e => e.PlanStatusName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<QuestionInstance>(entity =>
         {
-            entity.HasKey(e => e.QuestionInstanceID).HasName("PK__Question__05FDF52F5149959C");
+            entity.HasKey(e => e.QuestionInstanceID).HasName("PK__Question__05FDF52F53D6F674");
 
-            entity.Property(e => e.QuestionInstanceID).HasMaxLength(10);
+            entity.Property(e => e.QuestionInstanceID).HasMaxLength(50);
             entity.Property(e => e.AnswerOptionID).HasMaxLength(10);
             entity.Property(e => e.QuestionContent).HasMaxLength(100);
             entity.Property(e => e.QuestionTemplateID).HasMaxLength(10);
@@ -231,18 +233,13 @@ public partial class dbJapaneseLearnSystemContext : DbContext
                 .HasForeignKey(d => d.QuestionTemplateID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__QuestionI__Quest__59063A47");
-
-            entity.HasOne(d => d.Word).WithMany(p => p.QuestionInstance)
-                .HasForeignKey(d => d.WordID)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_QuestionInstance_Word");
         });
 
         modelBuilder.Entity<QuestionOption>(entity =>
         {
-            entity.HasKey(e => new { e.QuestionInstanceID, e.OptionID }).HasName("PK__Question__ECD18F32B5E5510D");
+            entity.HasKey(e => new { e.QuestionInstanceID, e.OptionID }).HasName("PK__Question__ECD18F325F50202C");
 
-            entity.Property(e => e.QuestionInstanceID).HasMaxLength(10);
+            entity.Property(e => e.QuestionInstanceID).HasMaxLength(50);
             entity.Property(e => e.OptionID).HasMaxLength(10);
             entity.Property(e => e.OptionContent).HasMaxLength(20);
 
@@ -254,21 +251,26 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<QuestionTemplate>(entity =>
         {
-            entity.HasKey(e => e.QuestionTemplateID).HasName("PK__Question__1AD09B2CAC72797F");
+            entity.HasKey(e => e.QuestionTemplateID).HasName("PK__Question__1AD09B2C188CC73F");
 
             entity.Property(e => e.QuestionTemplateID).HasMaxLength(10);
             entity.Property(e => e.QuestionTemplate1)
                 .HasMaxLength(100)
                 .HasColumnName("QuestionTemplate");
             entity.Property(e => e.QuestionType).HasMaxLength(100);
+
+            entity.HasOne(d => d.Word).WithMany(p => p.QuestionTemplate)
+                .HasForeignKey(d => d.WordID)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__QuestionT__WordI__5629CD9C");
         });
 
         modelBuilder.Entity<Record>(entity =>
         {
-            entity.HasKey(e => new { e.MemberID, e.QuestionInstanceID }).HasName("PK__Record__ECAF946A7147311C");
+            entity.HasKey(e => new { e.MemberID, e.QuestionInstanceID }).HasName("PK__Record__ECAF946A599425A4");
 
             entity.Property(e => e.MemberID).HasMaxLength(10);
-            entity.Property(e => e.QuestionInstanceID).HasMaxLength(10);
+            entity.Property(e => e.QuestionInstanceID).HasMaxLength(50);
 
             entity.HasOne(d => d.Member).WithMany(p => p.Record)
                 .HasForeignKey(d => d.MemberID)
@@ -283,7 +285,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleID).HasName("PK__Role__8AFACE3AF6C8224F");
+            entity.HasKey(e => e.RoleID).HasName("PK__Role__8AFACE3A726A9B77");
 
             entity.Property(e => e.RoleID).HasMaxLength(10);
             entity.Property(e => e.RoleName).HasMaxLength(40);
@@ -291,7 +293,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<SubscriptionPlan>(entity =>
         {
-            entity.HasKey(e => e.PlanID).HasName("PK__Subscrip__755C22D7E947B500");
+            entity.HasKey(e => e.PlanID).HasName("PK__Subscrip__755C22D7965D3152");
 
             entity.Property(e => e.FeeInfo).HasMaxLength(100);
             entity.Property(e => e.PlanName).HasMaxLength(50);
@@ -299,13 +301,11 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
         modelBuilder.Entity<Word>(entity =>
         {
-            entity.HasKey(e => e.WordID).HasName("PK__Word__2C20F046BA3BD3D8");
+            entity.HasKey(e => e.WordID).HasName("PK__Word__2C20F0466083A6C5");
 
             entity.Property(e => e.PartOfSpeech).HasMaxLength(50);
-            entity.Property(e => e.Reading).HasMaxLength(50);
-            entity.Property(e => e.Word1)
-                .HasMaxLength(20)
-                .HasColumnName("Word");
+            entity.Property(e => e.Reading).HasMaxLength(100);
+            entity.Property(e => e.Vocabulary).HasMaxLength(50);
             entity.Property(e => e.WordTranslate).HasMaxLength(20);
 
             entity.HasOne(d => d.JLPTLevel).WithMany(p => p.Word)

@@ -7,7 +7,9 @@ public partial class Word
 {
     public int WordID { get; set; }
 
-    public string Word1 { get; set; } = null!;
+    public string Vocabulary { get; set; } = null!;
+
+    public string? Reading { get; set; }
 
     public string PartOfSpeech { get; set; } = null!;
 
@@ -15,11 +17,9 @@ public partial class Word
 
     public int JLPTLevelID { get; set; }
 
-    public string? Reading { get; set; }
-
     public virtual JLPTLevel JLPTLevel { get; set; } = null!;
 
-    public virtual ICollection<QuestionInstance> QuestionInstance { get; set; } = new List<QuestionInstance>();
+    public virtual ICollection<QuestionTemplate> QuestionTemplate { get; set; } = new List<QuestionTemplate>();
 
     public virtual ICollection<Note> Note { get; set; } = new List<Note>();
 }

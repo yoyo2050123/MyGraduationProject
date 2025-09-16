@@ -17,6 +17,7 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
             
         }
 
+        
         // GET: Members/Question/PracticePrepare
         [HttpGet]
         public IActionResult PracticePrepare()

@@ -15,13 +15,9 @@ public partial class QuestionInstance
 
     public DateTime CreateDate { get; set; }
 
-    public int WordID { get; set; }
-
     public virtual ICollection<QuestionOption> QuestionOption { get; set; } = new List<QuestionOption>();
 
     public virtual QuestionTemplate QuestionTemplate { get; set; } = null!;
 
     public virtual ICollection<Record> Record { get; set; } = new List<Record>();
-
-    public virtual Word Word { get; set; } = null!;
 }

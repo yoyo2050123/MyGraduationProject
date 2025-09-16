@@ -32,6 +32,7 @@ builder.Services.AddDbContext<dbJapaneseLearnSystemContext>(options =>
 builder.Services.AddDbContext<dbJapaneseLearnSystemContextG2>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("dbJapaneseLearnSystemConnection")));
 
+builder.Services.AddScoped<QuestionGenerate>();
 
 
 

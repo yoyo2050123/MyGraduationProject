@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "題目產生結果";
+    var generatedCount = ViewBag.GeneratedCount as int? ?? 0;
+    var messages = ViewBag.Messages as List<string> ?? new List<string>();
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <p>成功產生題目數量：<strong>@generatedCount</strong></p>
+</div>
+
+@if (messages.Any())
+{
+    <div>
+        <h4>題目內容：</h4>
+        <ul>
+            @foreach (var msg in messages)
+            {
+                <li>@msg</li>
+            }
+        </ul>
+    </div>
+}
+else
+{
+    <p>沒有產生任何題目。</p>
+}
+
+<a asp-action="Index" class="btn btn-primary">返回題目管理</a>
