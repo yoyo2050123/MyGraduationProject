@@ -11,7 +11,7 @@ public partial class Note
 
     public string OriginalArticle { get; set; } = null!;
 
-    public string? Reading { get; set; }
+    public string Reading { get; set; } = null!;
 
     public string Translate { get; set; } = null!;
 
@@ -22,6 +22,4 @@ public partial class Note
     public virtual JLPTLevel JLPTLevel { get; set; } = null!;
 
     public virtual Member Member { get; set; } = null!;
-
-    public virtual ICollection<Word> Word { get; set; } = new List<Word>();
 }

@@ -9,6 +9,8 @@ public partial class QuestionInstance
 
     public string QuestionTemplateID { get; set; } = null!;
 
+    public int WordID { get; set; }
+
     public string AnswerOptionID { get; set; } = null!;
 
     public string QuestionContent { get; set; } = null!;
@@ -20,4 +22,6 @@ public partial class QuestionInstance
     public virtual QuestionTemplate QuestionTemplate { get; set; } = null!;
 
     public virtual ICollection<Record> Record { get; set; } = new List<Record>();
+
+    public virtual Word Word { get; set; } = null!;
 }

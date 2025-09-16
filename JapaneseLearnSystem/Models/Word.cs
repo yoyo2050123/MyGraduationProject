@@ -9,7 +9,7 @@ public partial class Word
 
     public string Vocabulary { get; set; } = null!;
 
-    public string? Reading { get; set; }
+    public string Reading { get; set; } = null!;
 
     public string PartOfSpeech { get; set; } = null!;
 
@@ -19,7 +19,5 @@ public partial class Word
 
     public virtual JLPTLevel JLPTLevel { get; set; } = null!;
 
-    public virtual ICollection<QuestionTemplate> QuestionTemplate { get; set; } = new List<QuestionTemplate>();
-
-    public virtual ICollection<Note> Note { get; set; } = new List<Note>();
+    public virtual ICollection<QuestionInstance> QuestionInstance { get; set; } = new List<QuestionInstance>();
 }

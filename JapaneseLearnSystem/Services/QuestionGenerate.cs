@@ -47,7 +47,7 @@ public class QuestionGenerate
             var word = words[_random.Next(words.Count)];
 
             // 生成題目內容
-            string content = template.QuestionTemplate1.Replace("{Word}", word.Vocabulary);
+            string content = template.QuestionTemplateText.Replace("{Word}", word.Vocabulary);
 
             // 防止同一輪嘗試重複
             string key = $"{template.QuestionTemplateID}-{word.WordID}";
@@ -72,7 +72,7 @@ public class QuestionGenerate
             {
                 QuestionInstanceID = Guid.NewGuid().ToString(),
                 QuestionTemplateID = template.QuestionTemplateID,
-                
+                WordID = word.WordID,
                 QuestionContent = content,
                 CreateDate = DateTime.Now
             };
