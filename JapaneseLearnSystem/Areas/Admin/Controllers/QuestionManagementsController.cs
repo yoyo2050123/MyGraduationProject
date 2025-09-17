@@ -31,7 +31,18 @@ namespace JapaneseLearnSystem.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GenerateQuestionsAjax(int count)
+        {
+            var (generatedCount, messages) = await _questionGenerate.GenerateMultipleQuestionsAsync(count);
 
+            return Json(new
+            {
+                success = true,
+                generatedCount,
+                messages
+            });
+        }
 
 
 

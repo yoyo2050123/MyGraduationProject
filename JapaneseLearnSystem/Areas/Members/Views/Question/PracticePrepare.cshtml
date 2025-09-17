@@ -1,13 +1,23 @@
-﻿@{
+﻿@model JapaneseLearnSystem.Areas.Members.Models.PracticePrepare
+
+@{
     ViewData["Title"] = "選擇題數";
 }
 
 <h2>選擇練習題數</h2>
 
-<form asp-action="GenerateQuestions" method="post">
+<form asp-area="Members" asp-controller="Question" asp-action="PracticePrepare" method="post">
+    @Html.AntiForgeryToken()
     <div class="mb-3">
-        <label for="count" class="form-label">請輸入想練習的題目數：</label>
-        <input type="number" class="form-control" id="count" name="count" min="1" max="20" required />
+        <label asp-for="Count" class="form-label">請輸入練習題數:</label>
+        <input asp-for="Count" class="form-control" type="number" 
+        oninvalid="this.setCustomValidity('請輸入 1~20 的題目數')"
+        oninput="this.setCustomValidity('')" />
+        <span asp-validation-for="Count" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">開始練習</button>
 </form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,30 +1,49 @@
 ﻿@{
-    ViewData["Title"] = "題目產生結果";
-    var generatedCount = ViewBag.GeneratedCount as int? ?? 0;
-    var messages = ViewBag.Messages as List<string> ?? new List<string>();
+    ViewData["Title"] = "生成題目";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2>生成題目</h2>
 
-<div>
-    <p>成功產生題目數量：<strong>@generatedCount</strong></p>
+<div class="form-group">
+    <label for="count">輸入要生成的題目數量：</label>
+    <input type="number" id="count" class="form-control" value="10" min="1" />
+</div>
+<button id="generateBtn" class="btn btn-primary mt-2">生成</button>
+
+<hr />
+
+<div id="resultArea">
+    <!-- 生成結果會顯示在這裡 -->
 </div>
 
-@if (messages.Any())
-{
-    <div>
-        <h4>題目內容：</h4>
-        <ul>
-            @foreach (var msg in messages)
-            {
-                <li>@msg</li>
-            }
-        </ul>
-    </div>
-}
-else
-{
-    <p>沒有產生任何題目。</p>
-}
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            $("#generateBtn").click(function () {
+                var count = $("#count").val();
 
-<a asp-action="Index" class="btn btn-primary">返回題目管理</a>
+                $.ajax({
+                    url: '@Url.Action("GenerateQuestionsAjax", "QuestionManagements", new { area = "Admin" })',
+                    type: 'POST',
+                    data: { count: count },
+                    success: function (response) {
+                        if (response.success) {
+                            var html = "<h4>已生成 " + response.generatedCount + " 題：</h4><ul>";
+                            $.each(response.messages, function (i, msg) {
+                                html += "<li>" + msg + "</li>";
+                            });
+                            html += "</ul>";
+                            $("#resultArea").html(html);
+                        } else {
+                            $("#resultArea").html("<p class='text-danger'>生成失敗</p>");
+                        }
+                    },
+                    error: function () {
+                        $("#resultArea").html("<p class='text-danger'>發生錯誤</p>");
+                    }
+                });
+            });
+        });
+    </script>
+}

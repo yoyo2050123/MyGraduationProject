@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using JapaneseLearnSystem.Areas.Members.Models;
+using JapaneseLearnSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using JapaneseLearnSystem.Models; 
+using Microsoft.EntityFrameworkCore;
 
 namespace JapaneseLearnSystem.Areas.Members.Controllers
 {
@@ -14,37 +16,98 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         public QuestionController(dbJapaneseLearnSystemContext context)
         {
             _context = context;
-            
+
         }
 
-        
+
         // GET: Members/Question/PracticePrepare
         [HttpGet]
         public IActionResult PracticePrepare()
         {
-            return View();
+            return View(new PracticePrepare());
         }
 
         // POST: Members/Question/PracticePrepare
         [HttpPost]
-
-        public IActionResult PracticePrepare(int questionCount)
+        [ValidateAntiForgeryToken]
+        public IActionResult PracticePrepare(PracticePrepare model)
         {
-            if (questionCount <= 0)
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "請輸入大於 0 的題目數量。");
-                return View();
+                return View(model);
             }
 
-            // 跳轉到 Practice Action，並傳入題目數量
-            return RedirectToAction("QuestionPage", new { count = questionCount });
-        }
-        
+            if (model.Count < 1 || model.Count > 20)
+            {
+                ModelState.AddModelError("Count", "題數必須在 1~20 題");
+                return View(model);
+            }
 
-        public IActionResult QuestionPage()
-        {
-            return View();
+
+           
+            // 成功 → Redirect 到 QuestionPage，使用 Query String 傳 count
+            return RedirectToAction("QuestionPage", "Question", new { area = "Members", count = model.Count });
+        
         }
+
+        [HttpGet]
+        public async Task<IActionResult> QuestionPage(int count = 1)
+        {
+            // 隨機抽題
+            var questionInstances = await _context.QuestionInstance
+                .OrderBy(q => Guid.NewGuid())
+                .Take(count)
+                .ToListAsync();
+
+            var modelList = new List<QuestionPage>();
+
+            foreach (var q in questionInstances)
+            {
+                // 取得該題所有選項
+                var options = await _context.QuestionOption
+                    .Where(o => o.QuestionInstanceID == q.QuestionInstanceID)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                // 打亂選項順序
+                var shuffledOptions = options.OrderBy(o => Guid.NewGuid()).ToList();
+
+                modelList.Add(new QuestionPage
+                {
+                    QuestionInstanceID = q.QuestionInstanceID,
+                    QuestionContent = q.QuestionContent,
+                    Options = shuffledOptions
+                });
+            }
+
+            return View(modelList);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult QuestionPage(List<QuestionPage> submittedAnswers)
+        {
+            int correctCount = 0;
+
+            foreach (var answer in submittedAnswers)
+            {
+                // 找出正確答案
+                var question = _context.QuestionInstance
+                .FirstOrDefault(q => q.QuestionInstanceID == answer.QuestionInstanceID);
+
+                // 注意：你這裡可以改用 AnswerOptionID 去比對
+                if (answer.SelectedOptionID == question?.AnswerOptionID)
+                {
+                    correctCount++;
+                }
+            }
+
+            TempData["ResultMessage"] = $"你答對 {correctCount} / {submittedAnswers.Count} 題！";
+
+            return RedirectToAction(nameof(QuestionPage), new { count = submittedAnswers.Count });
+        }
+
+
         public IActionResult QuestionResult()
         {
             return View();

@@ -1,27 +1,40 @@
 ﻿@model List<JapaneseLearnSystem.Areas.Members.Models.QuestionPage>
 
 @{
-    ViewData["Title"] = "練習頁面";
+    ViewData["Title"] = "練習題";
 }
 
-<h2>請作答</h2>
+<h2>練習題</h2>
 
-<form asp-action="SubmitAnswers" method="post">
+@if (TempData["ResultMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["ResultMessage"]</div>
+}
+
+<form asp-action="QuestionPage" method="post">
     @for (int i = 0; i < Model.Count; i++)
     {
-        <div>
-            <p>@Model[i].QuestionContent</p>
-            @foreach (var option in Model[i].Options)
+        <div class="question-block mb-3">
+            <p><strong>題目 @(i + 1):</strong> @Model[i].QuestionContent</p>
+
+            @for (int j = 0; j < Model[i].Options.Count; j++)
             {
-                <input type="radio"
-                       asp-for="@Model[i].SelectedOptionID"
-                       value="@option.OptionID"
-                       id="@Model[i].QuestionInstanceID@option.OptionID" />
-                <label for="@Model[i].QuestionInstanceID@option.OptionID">@option.OptionContent</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio"
+                           asp-for="@Model[i].SelectedOptionID"
+                           value="@Model[i].Options[j].OptionID"
+                           id="q@i-option@j"
+                           name="[@i].SelectedOptionID" />
+
+                    <label class="form-check-label" for="q@i-option@j">
+                        @Model[i].Options[j].OptionContent
+                    </label>
+                </div>
             }
+
+            <input type="hidden" asp-for="@Model[i].QuestionInstanceID" />
         </div>
-        <hr />
     }
 
-    <button type="submit">提交答案</button>
+    <button type="submit" class="btn btn-primary">提交答案</button>
 </form>
