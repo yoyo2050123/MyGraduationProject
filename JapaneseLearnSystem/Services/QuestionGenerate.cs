@@ -47,7 +47,7 @@ public class QuestionGenerate
             var word = words[_random.Next(words.Count)];
 
             // 生成題目內容
-            string content = template.QuestionTemplateText.Replace("{Word}", word.Vocabulary);
+            string content = template.QuestionTemplateText.Replace("{0}", word.Vocabulary);
 
             // 防止同一輪嘗試重複
             string key = $"{template.QuestionTemplateID}-{word.WordID}";
@@ -56,11 +56,10 @@ public class QuestionGenerate
                 if (triedCombinations.Count >= templates.Count * words.Count)
                 {
                     messages.Add("所有可能的題目組合已用完");
-                    break; // 沒有更多新題目可以生成
+                    break;
                 }
                 continue;
             }
-
             triedCombinations.Add(key);
 
             // 檢查是否已存在
@@ -70,42 +69,51 @@ public class QuestionGenerate
             // 建立 QuestionInstance
             var questionInstance = new QuestionInstance
             {
-                QuestionInstanceID = Guid.NewGuid().ToString(),
+                QuestionInstanceID = await GenerateQuestionInstanceIdAsync(),
                 QuestionTemplateID = template.QuestionTemplateID,
                 WordID = word.WordID,
                 QuestionContent = content,
                 CreateDate = DateTime.Now
             };
 
-            // 生成選項
+            // 生成選項清單（全新物件，避免追蹤衝突）
             var options = new List<QuestionOption>();
-            // 正確答案
+
+            // 正確答案 OptionID = "1"
             options.Add(new QuestionOption
             {
                 QuestionInstanceID = questionInstance.QuestionInstanceID,
-                OptionID = Guid.NewGuid().ToString(),
+                OptionID = "1",
                 OptionContent = word.Vocabulary
             });
 
-            // 幹擾選項
+            // 幹擾選項 OptionID = "2", "3", "4"
             var otherWords = words.Where(w => w.WordID != word.WordID)
                                   .OrderBy(x => _random.Next())
-                                  .Take(3);
+                                  .Take(3)
+                                  .ToList();
+
+            int idx = 2;
             foreach (var w in otherWords)
             {
                 options.Add(new QuestionOption
                 {
                     QuestionInstanceID = questionInstance.QuestionInstanceID,
-                    OptionID = Guid.NewGuid().ToString(),
+                    OptionID = idx.ToString(),
                     OptionContent = w.Vocabulary
                 });
+                idx++;
             }
 
-            // 打亂順序
+            // 設定正確答案 OptionID
+            questionInstance.AnswerOptionID = "1";
+
+            // 打亂選項順序
             questionInstance.QuestionOption = options.OrderBy(x => _random.Next()).ToList();
 
-            // 存入資料庫
+            // 將整個 QuestionInstance 連同選項一起加入 DbContext
             _context.QuestionInstance.Add(questionInstance);
+
             await _context.SaveChangesAsync();
 
             generated++;
@@ -113,5 +121,27 @@ public class QuestionGenerate
         }
 
         return (generated, messages);
+    }
+
+    /// <summary>
+    /// 生成 QuestionInstanceID 流水號，例如 Q0001、Q0002
+    /// </summary>
+    private async Task<string> GenerateQuestionInstanceIdAsync()
+    {
+        var lastId = await _context.QuestionInstance
+                                   .OrderByDescending(q => q.QuestionInstanceID)
+                                   .Select(q => q.QuestionInstanceID)
+                                   .FirstOrDefaultAsync();
+
+        int number = 1;
+        if (!string.IsNullOrEmpty(lastId) && lastId.Length > 1)
+        {
+            if (int.TryParse(lastId.Substring(1), out int n))
+            {
+                number = n + 1;
+            }
+        }
+
+        return $"Q{number:D4}";
     }
 }

@@ -33,7 +33,6 @@ public partial class Member
 
     public virtual ICollection<PaymentRecord> PaymentRecord { get; set; } = new List<PaymentRecord>();
 
-
     public virtual SubscriptionPlan? Plan { get; set; }
 
     public virtual ICollection<Record> Record { get; set; } = new List<Record>();
