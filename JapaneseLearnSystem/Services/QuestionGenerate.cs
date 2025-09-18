@@ -15,10 +15,6 @@ public class QuestionGenerate
         _context = context;
     }
 
-    /// <summary>
-    /// 批次生成指定數量的題目
-    /// </summary>
-    /// <param name="count">希望生成的題目數量</param>
     public async Task<(int GeneratedCount, List<string> Messages)> GenerateMultipleQuestionsAsync(int count)
     {
         var messages = new List<string>();
@@ -38,19 +34,16 @@ public class QuestionGenerate
             return (0, messages);
         }
 
-        var triedCombinations = new HashSet<string>(); // 防止無限循環
+        var triedCombinations = new HashSet<string>();
 
         while (generated < count)
         {
-            // 隨機選模板 + 單字
             var template = templates[_random.Next(templates.Count)];
             var word = words[_random.Next(words.Count)];
 
-            // 生成題目內容
             string content = template.QuestionTemplateText.Replace("{0}", word.Vocabulary);
-
-            // 防止同一輪嘗試重複
             string key = $"{template.QuestionTemplateID}-{word.WordID}";
+
             if (triedCombinations.Contains(key))
             {
                 if (triedCombinations.Count >= templates.Count * words.Count)
@@ -62,11 +55,9 @@ public class QuestionGenerate
             }
             triedCombinations.Add(key);
 
-            // 檢查是否已存在
             bool exists = await _context.QuestionInstance.AnyAsync(q => q.QuestionContent == content);
             if (exists) continue;
 
-            // 建立 QuestionInstance
             var questionInstance = new QuestionInstance
             {
                 QuestionInstanceID = await GenerateQuestionInstanceIdAsync(),
@@ -76,56 +67,65 @@ public class QuestionGenerate
                 CreateDate = DateTime.Now
             };
 
-            // 生成選項清單（全新物件，避免追蹤衝突）
-            var options = new List<QuestionOption>();
+            // 正確答案
+            string correctOptionContent = template.QuestionType switch
+            {
+                "Reading" => word.Reading,
+                "Meaning" => word.WordTranslate,
+                _ => word.Vocabulary
+            };
 
-            // 正確答案 OptionID = "1"
+            var optionsSet = new HashSet<string>();
+            optionsSet.Add(correctOptionContent); // 正確答案先加入
+
+            var options = new List<QuestionOption>();
             options.Add(new QuestionOption
             {
                 QuestionInstanceID = questionInstance.QuestionInstanceID,
                 OptionID = "1",
-                OptionContent = word.Vocabulary
+                OptionContent = correctOptionContent
             });
 
-            // 幹擾選項 OptionID = "2", "3", "4"
-            var otherWords = words.Where(w => w.WordID != word.WordID)
-                                  .OrderBy(x => _random.Next())
-                                  .Take(3)
-                                  .ToList();
-
+            // 幹擾選項
+            var shuffledWords = words.Where(w => w.WordID != word.WordID).OrderBy(x => _random.Next()).ToList();
             int idx = 2;
-            foreach (var w in otherWords)
+
+            foreach (var w in shuffledWords)
             {
+                string optionContent = template.QuestionType switch
+                {
+                    "Reading" => w.Reading,
+                    "Meaning" => w.WordTranslate,
+                    _ => w.Vocabulary
+                };
+
+                if (optionsSet.Contains(optionContent)) continue; // 避免重複
+                optionsSet.Add(optionContent);
+
                 options.Add(new QuestionOption
                 {
                     QuestionInstanceID = questionInstance.QuestionInstanceID,
                     OptionID = idx.ToString(),
-                    OptionContent = w.Vocabulary
+                    OptionContent = optionContent
                 });
+
                 idx++;
+                if (options.Count >= 4) break; // 3個干擾 + 1個正確答案
             }
 
-            // 設定正確答案 OptionID
             questionInstance.AnswerOptionID = "1";
+            questionInstance.QuestionOption = options.OrderBy(x => _random.Next()).ToList(); // 打亂
 
-            // 打亂選項順序
-            questionInstance.QuestionOption = options.OrderBy(x => _random.Next()).ToList();
-
-            // 將整個 QuestionInstance 連同選項一起加入 DbContext
             _context.QuestionInstance.Add(questionInstance);
-
             await _context.SaveChangesAsync();
 
             generated++;
-            messages.Add($"生成題目：{content}");
+            messages.Add($"生成題目：{content} | 正確答案：{correctOptionContent}");
         }
 
         return (generated, messages);
     }
 
-    /// <summary>
-    /// 生成 QuestionInstanceID 流水號，例如 Q0001、Q0002
-    /// </summary>
     private async Task<string> GenerateQuestionInstanceIdAsync()
     {
         var lastId = await _context.QuestionInstance

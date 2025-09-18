@@ -1,48 +1,38 @@
-﻿@model JapaneseLearnSystem.Models.LearnRecordTable
+﻿@model IEnumerable<JapaneseLearnSystem.Models.LearnRecordTable>
 
-<div>
-    <h4>LearnRecordTable</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LearnedWordCount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LearnedWordCount)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalAnswers)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TotalAnswers)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CorrectAnswers)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CorrectAnswers)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Accuracy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Accuracy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AnswerTime)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AnswerTime)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Member)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Member.MemberID)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.RecordID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@{
+    ViewData["Title"] = "我的學習報告";
+}
+
+<h2>學習報告（最多顯示 10 筆）</h2>
+
+@if (!Model.Any())
+{
+    <p>你目前沒有任何學習紀錄。</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>報表名稱</th>
+                <th>完成時間</th>
+                <th>總題數</th>
+                <th>答對題數</th>
+                <th>正確率 (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.RecordID</td>
+                    <td>@record.AnswerTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@record.TotalAnswers</td>
+                    <td>@record.CorrectAnswers</td>                    
+                    <td>@record.Accuracy</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

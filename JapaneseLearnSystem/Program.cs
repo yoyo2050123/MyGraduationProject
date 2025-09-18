@@ -34,6 +34,10 @@ builder.Services.AddDbContext<dbJapaneseLearnSystemContextG2>(options =>
 
 builder.Services.AddScoped<QuestionGenerate>();
 
+builder.Services.AddScoped<QuestionResultService>();
+
+builder.Services.AddScoped<LearnReportService>();
+
 
 
 
