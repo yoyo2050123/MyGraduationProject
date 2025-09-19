@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace JapaneseLearnSystem.Models;
 
@@ -28,6 +26,8 @@ public partial class Member
     public virtual ICollection<MemberRole> MemberRole { get; set; } = new List<MemberRole>();
 
     public virtual ICollection<MemberTel> MemberTel { get; set; } = new List<MemberTel>();
+
+    public virtual ICollection<MemberUsageLog> MemberUsageLog { get; set; } = new List<MemberUsageLog>();
 
     public virtual ICollection<Note> Note { get; set; } = new List<Note>();
 
