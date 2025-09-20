@@ -54,7 +54,7 @@ namespace JapaneseLearnSystem.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PlanID,PlanName,FeeInfo,DailyQuestionLimit,LearnedWordLimit,FavoriteLimit")] SubscriptionPlan subscriptionPlan)
+        public async Task<IActionResult> Create([Bind("PlanID,PlanName,FeeInfo,DailyQuestionLimit,LearnedWordLimit,NoteLimit")] SubscriptionPlan subscriptionPlan)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace JapaneseLearnSystem.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(byte id, [Bind("PlanID,PlanName,FeeInfo,DailyQuestionLimit,LearnedWordLimit,FavoriteLimit")] SubscriptionPlan subscriptionPlan)
+        public async Task<IActionResult> Edit(byte id, [Bind("PlanID,PlanName,FeeInfo,DailyQuestionLimit,LearnedWordLimit,NoteLimit")] SubscriptionPlan subscriptionPlan)
         {
             if (id != subscriptionPlan.PlanID)
             {

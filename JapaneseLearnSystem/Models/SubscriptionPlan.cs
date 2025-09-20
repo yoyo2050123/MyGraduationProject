@@ -15,7 +15,7 @@ public partial class SubscriptionPlan
 
     public int? LearnedWordLimit { get; set; }
 
-    public int? FavoriteLimit { get; set; }
+    public int? NoteLimit { get; set; }
 
     public virtual ICollection<Member> Member { get; set; } = new List<Member>();
 

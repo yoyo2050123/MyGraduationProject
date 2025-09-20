@@ -25,17 +25,13 @@ namespace JapaneseLearnSystem.Services
             int notesUsed = 0,
             int questionsUsed = 0)
         {
-            
+
 
             // 1️⃣ 取得會員與方案
             var memberWithPlan = _context.Member
-                .Where(m => m.MemberID == memberId)
-                .Select(m => new
-                {
-                    m.MemberID,
-                    Plan = _context.SubscriptionPlan.FirstOrDefault(p => p.PlanID == m.PlanID)
-                })
-                .FirstOrDefault();
+                .Include(m => m.Plan) // 載入 Navigation Property
+                .FirstOrDefault(m => m.MemberID == memberId);
+
 
             if (memberWithPlan == null) throw new Exception("會員不存在");
 
@@ -66,8 +62,8 @@ namespace JapaneseLearnSystem.Services
                 ? memberWithPlan.Plan.LearnedWordLimit - usageLog.WordCount
                 : (int?)null;
 
-            int? remainingNotes = memberWithPlan.Plan.FavoriteLimit.HasValue
-                ? memberWithPlan.Plan.FavoriteLimit - usageLog.NoteCount
+            int? remainingNotes = memberWithPlan.Plan.NoteLimit.HasValue
+                ? memberWithPlan.Plan.NoteLimit - usageLog.NoteCount
                 : (int?)null;
 
             int? remainingQuestions = memberWithPlan.Plan.DailyQuestionLimit.HasValue
