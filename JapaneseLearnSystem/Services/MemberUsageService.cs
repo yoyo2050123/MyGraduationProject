@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using JapaneseLearnSystem.Models;
-using System.Collections.Generic;
 
 namespace JapaneseLearnSystem.Services
 {
@@ -25,13 +24,10 @@ namespace JapaneseLearnSystem.Services
             int notesUsed = 0,
             int questionsUsed = 0)
         {
-
-
             // 1️⃣ 取得會員與方案
             var memberWithPlan = _context.Member
-                .Include(m => m.Plan) // 載入 Navigation Property
+                .Include(m => m.Plan)
                 .FirstOrDefault(m => m.MemberID == memberId);
-
 
             if (memberWithPlan == null) throw new Exception("會員不存在");
 
@@ -43,9 +39,12 @@ namespace JapaneseLearnSystem.Services
 
             if (usageLog == null)
             {
+                // 生成流水號 ID: USL0000001
+                string newUsageLogId = GenerateUsageLogID();
+
                 usageLog = new MemberUsageLog
                 {
-                    UsageLogID = "U" + Guid.NewGuid().ToString("N").Substring(0, 6),
+                    UsageLogID = newUsageLogId,
                     MemberID = memberId,
                     UsageLogDate = today,
                     WordCount = 0,
@@ -85,6 +84,57 @@ namespace JapaneseLearnSystem.Services
 
             _context.SaveChanges();
         }
-    }
 
+        /// <summary>
+        /// 取得會員今天還剩多少題可以使用
+        /// </summary>
+        public int? GetRemainingQuestions(string memberId)
+        {
+            var memberWithPlan = _context.Member
+                .Where(m => m.MemberID == memberId)
+                .Select(m => new
+                {
+                    m.MemberID,
+                    Plan = _context.SubscriptionPlan.FirstOrDefault(p => p.PlanID == m.PlanID)
+                })
+                .FirstOrDefault();
+
+            if (memberWithPlan == null) return null;
+
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var usageLog = _context.MemberUsageLog
+                .FirstOrDefault(u => u.MemberID == memberId && u.UsageLogDate == today);
+
+            int usedQuestions = usageLog?.QuestionCount ?? 0;
+
+            if (!memberWithPlan.Plan.DailyQuestionLimit.HasValue)
+                return null; // 無限制
+
+            return memberWithPlan.Plan.DailyQuestionLimit.Value - usedQuestions;
+        }
+
+        /// <summary>
+        /// 生成流水號 UsageLogID (USL0000001)
+        /// </summary>
+        private string GenerateUsageLogID()
+        {
+            // 取資料庫目前最大 ID
+            var lastLog = _context.MemberUsageLog
+                .Where(u => u.UsageLogID.StartsWith("USL"))
+                .OrderByDescending(u => u.UsageLogID)
+                .FirstOrDefault();
+
+            int nextNumber = 1;
+            if (lastLog != null)
+            {
+                string lastNumberStr = lastLog.UsageLogID.Substring(3); // 去掉 "USL"
+                if (int.TryParse(lastNumberStr, out int lastNumber))
+                {
+                    nextNumber = lastNumber + 1;
+                }
+            }
+
+            return "USL" + nextNumber.ToString("D7"); // 7位數補零
+        }
+    }
 }

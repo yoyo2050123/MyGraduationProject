@@ -19,6 +19,8 @@ public partial class Note
 
     public string MemberID { get; set; } = null!;
 
+    public DateTime CreateNoteAt { get; set; }
+
     public virtual JLPTLevel JLPTLevel { get; set; } = null!;
 
     public virtual Member Member { get; set; } = null!;

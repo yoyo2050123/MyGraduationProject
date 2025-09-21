@@ -15,13 +15,13 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         private readonly ILogger<QuestionController> _logger;
         private readonly QuestionResultService _resultService;
         private readonly LearnReportService _reportService;
-
-        public QuestionController(dbJapaneseLearnSystemContext context, QuestionResultService resultService,LearnReportService learnReportService)
+        private readonly MemberUsageService _usageService;
+        public QuestionController(dbJapaneseLearnSystemContext context, QuestionResultService resultService, LearnReportService learnReportService, MemberUsageService usageService)
         {
             _context = context;
             _resultService = resultService;
             _reportService = learnReportService;
-
+            _usageService = usageService;
         }
 
 
@@ -32,6 +32,11 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         [HttpGet]
         public IActionResult PracticePrepare()
         {
+            string memberId = User.FindFirst("MemberID")?.Value;
+            // 這裡改成從登入取得
+            int? remainingQuestions = _usageService.GetRemainingQuestions(memberId);
+
+            ViewBag.RemainingQuestions = remainingQuestions; // 傳到 View
             return View(new PracticePrepare());
         }
 
@@ -40,23 +45,34 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult PracticePrepare(PracticePrepare model)
         {
+            string memberId = User.FindFirst("MemberID")?.Value;
+            int? remainingQuestions = _usageService.GetRemainingQuestions(memberId);
+
             if (!ModelState.IsValid)
             {
+                ViewBag.RemainingQuestions = remainingQuestions;
                 return View(model);
             }
 
             if (model.Count < 1 || model.Count > 20)
             {
                 ModelState.AddModelError("Count", "題數必須在 1~20 題");
+                ViewBag.RemainingQuestions = remainingQuestions;
                 return View(model);
             }
 
+            // ⚠️ 新增每日剩餘題數檢查
+            if (remainingQuestions.HasValue && model.Count > remainingQuestions.Value)
+            {
+                ModelState.AddModelError("Count", $"你今天最多還能玩 {remainingQuestions.Value} 題");
+                ViewBag.RemainingQuestions = remainingQuestions;
+                return View(model);
+            }
 
-           
-            // 成功 → Redirect 到 QuestionPage，使用 Query String 傳 count
+            // 成功 → Redirect 到 QuestionPage
             return RedirectToAction("QuestionPage", "Question", new { area = "Members", count = model.Count });
-        
         }
+
 
         [HttpGet]
         public async Task<IActionResult> QuestionPage(int count = 1)
@@ -88,15 +104,16 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
                     Options = shuffledOptions
                 });
             }
-            
+
             return View(modelList);
-            
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> QuestionPage(List<QuestionPage> submittedAnswers)
         {
+
             if (submittedAnswers == null || submittedAnswers.Count == 0)
             {
                 TempData["ResultMessage"] = "沒有收到任何答案。";
@@ -105,6 +122,10 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
 
             // 取得會員 ID（假設是 string 型別）
             string memberId = User.FindFirst("MemberID")?.Value ?? string.Empty;
+
+            // 扣掉今天玩的題數
+            int playedCount = submittedAnswers.Count;
+            _usageService.Use(memberId, questionsUsed: playedCount);
 
             // 呼叫 Service 生成完整答題結果
             var results = await _resultService.GenerateResultsAsync(submittedAnswers);
@@ -133,6 +154,8 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
 
             // 給使用者訊息
             TempData["ResultMessage"] = $"你答對 {correctCount} / {totalAnswers} 題！";
+
+
 
             // 將結果傳給 QuestionResult View
             return View("QuestionResult", results);

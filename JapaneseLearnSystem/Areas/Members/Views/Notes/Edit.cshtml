@@ -1,0 +1,55 @@
+﻿@model JapaneseLearnSystem.Models.NoteViewModel
+
+@{
+    ViewData["Title"] = "Edit Note";
+}
+
+<h1>Edit Note</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="NoteID" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="OriginalArticle"></label>
+        <input asp-for="OriginalArticle" class="form-control" />
+        <span asp-validation-for="OriginalArticle" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Reading"></label>
+        <input asp-for="Reading" class="form-control" />
+        <span asp-validation-for="Reading" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Translate"></label>
+        <input asp-for="Translate" class="form-control" />
+        <span asp-validation-for="Translate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="JLPTLevelID"></label>
+        <select asp-for="JLPTLevelID" class="form-control" asp-items="@(ViewData["JLPTLevels"] as IEnumerable<SelectListItem>)">
+            <option value="">請選擇單字的 JLPT 等級</option>
+        </select>
+        <span asp-validation-for="JLPTLevelID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

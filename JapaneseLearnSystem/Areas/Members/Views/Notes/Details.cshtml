@@ -1,0 +1,31 @@
+﻿@model JapaneseLearnSystem.Models.NoteViewModel
+
+@{
+    ViewData["Title"] = "Note Details";
+}
+
+<h1>Note Details</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Title</dt>
+        <dd class="col-sm-10">@Model.Title</dd>
+
+        <dt class="col-sm-2">Original Article</dt>
+        <dd class="col-sm-10">@Model.OriginalArticle</dd>
+
+        <dt class="col-sm-2">Reading</dt>
+        <dd class="col-sm-10">@Model.Reading</dd>
+
+        <dt class="col-sm-2">Translate</dt>
+        <dd class="col-sm-10">@Model.Translate</dd>
+
+        <dt class="col-sm-2">JLPT Level</dt>
+        <dd class="col-sm-10">@Model.JLPTLevelName</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.NoteID" class="btn btn-primary">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

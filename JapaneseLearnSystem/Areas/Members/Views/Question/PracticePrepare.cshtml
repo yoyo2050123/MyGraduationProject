@@ -6,6 +6,16 @@
 
 <h2>選擇練習題數</h2>
 
+@if (ViewBag.RemainingQuestions != null)
+{
+    <p>你今天還能玩 <span class="text-red">@ViewBag.RemainingQuestions</span> 題</p>
+
+}
+else
+{
+    <p>你今天可無限制玩題目</p>
+}
+
 <form asp-area="Members" asp-controller="Question" asp-action="PracticePrepare" method="post">
     @Html.AntiForgeryToken()
     <div class="mb-3">
