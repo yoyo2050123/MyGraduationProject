@@ -1,0 +1,48 @@
+﻿/* =======================
+   🌸 Cute Theme CSS
+   ======================= */
+.note-details-card {
+    background: #fff0f6;
+    border: 2px solid #ffb6c1;
+    border-radius: 12px;
+}
+
+h2.text-pink {
+    color: #ff69b4;
+    font-weight: bold;
+    text-shadow: 1px 1px #ffd6e7;
+}
+
+.btn-pink {
+    background-color: #ff69b4;
+    border: none;
+    color: white !important;
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 8px 20px;
+    transition: 0.3s;
+}
+
+    .btn-pink:hover {
+        background-color: #ff85c1;
+        transform: scale(1.05);
+    }
+
+dt {
+    font-weight: bold;
+    color: #ff6fa9;
+}
+.text-pink {
+    color: #ff69b4;
+    font-weight: bold;
+    text-shadow: 1px 1px #ffd6e7;
+}
+
+.border-pink {
+    border: 1.5px solid #ffb6c1 !important;
+    border-radius: 6px;
+}
+.auto-resize {
+    resize: none; /* 禁止手動拖拉，改用自動增高 */
+    overflow: hidden;
+}

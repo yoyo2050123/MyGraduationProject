@@ -1,55 +1,68 @@
 ﻿@model JapaneseLearnSystem.Models.NoteViewModel
 
 @{
-    ViewData["Title"] = "Edit Note";
+    ViewData["Title"] = "編輯筆記";
 }
 
-<h1>Edit Note</h1>
+<div class="note-details-card p-4 shadow-sm">
+    <h2 class="text-pink mb-4">✏️ 編輯筆記</h2>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="NoteID" />
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <form asp-action="Edit">
+        <input type="hidden" asp-for="NoteID" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label fw-bold text-pink"></label>
+            <input asp-for="Title" class="form-control border-pink" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="OriginalArticle"></label>
-        <input asp-for="OriginalArticle" class="form-control" />
-        <span asp-validation-for="OriginalArticle" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="OriginalArticle" class="form-label fw-bold text-pink"></label>
+            <textarea asp-for="OriginalArticle" class="form-control border-pink auto-resize" rows="3"></textarea>
+            <span asp-validation-for="OriginalArticle" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Reading"></label>
-        <input asp-for="Reading" class="form-control" />
-        <span asp-validation-for="Reading" class="text-danger"></span>
-    </div>
 
-    <div class="form-group">
-        <label asp-for="Translate"></label>
-        <input asp-for="Translate" class="form-control" />
-        <span asp-validation-for="Translate" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Reading" class="form-label fw-bold text-pink"></label>
+            <input asp-for="Reading" class="form-control border-pink" />
+            <span asp-validation-for="Reading" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="JLPTLevelID"></label>
-        <select asp-for="JLPTLevelID" class="form-control" asp-items="@(ViewData["JLPTLevels"] as IEnumerable<SelectListItem>)">
-            <option value="">請選擇單字的 JLPT 等級</option>
-        </select>
-        <span asp-validation-for="JLPTLevelID" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Translate" class="form-label fw-bold text-pink"></label>
+            <input asp-for="Translate" class="form-control border-pink" />
+            <span asp-validation-for="Translate" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</form>
+        <div class="mb-3">
+            <label asp-for="JLPTLevelID" class="form-label fw-bold text-pink"></label>
+            <select asp-for="JLPTLevelID" class="form-select border-pink" asp-items="@(ViewData["JLPTLevels"] as IEnumerable<SelectListItem>)">
+                <option value="">請選擇單字的 JLPT 等級</option>
+            </select>
+            <span asp-validation-for="JLPTLevelID" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-pink">💾 儲存</button>
+            <a asp-action="Index" class="btn btn-secondary">⬅️ 返回列表</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        document.addEventListener("input", function (e) {
+            if (e.target.classList.contains("auto-resize")) {
+                e.target.style.height = "auto";
+                e.target.style.height = (e.target.scrollHeight) + "px";
+            }
+        });
+    </script>
 }
+

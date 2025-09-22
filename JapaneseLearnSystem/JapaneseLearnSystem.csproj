@@ -33,9 +33,5 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
-<ItemGroup>
-  
-</ItemGroup>
-
 
 </Project>

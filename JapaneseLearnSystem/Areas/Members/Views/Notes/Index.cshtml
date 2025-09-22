@@ -39,9 +39,9 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.NoteID" class="btn btn-sm btn-warning me-1">編輯</a>
                     <a asp-action="Details" asp-route-id="@item.NoteID" class="btn btn-sm btn-info me-1">詳細</a>
-                    <form asp-action="Delete" asp-route-id="@item.NoteID" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-sm btn-danger">刪除</button>
-                    </form>|
+                    <a asp-action="Delete" asp-route-id="@item.NoteID" class="btn btn-sm btn-danger me-1">
+                        刪除
+                    </a>|
 
                 </td>
 

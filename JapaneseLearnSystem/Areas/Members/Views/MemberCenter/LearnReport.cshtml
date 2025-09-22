@@ -4,35 +4,62 @@
     ViewData["Title"] = "我的學習報告";
 }
 
-<h2>學習報告（最多顯示 10 筆）</h2>
+<h2 class="mb-4">📊 我的學習報告（最多顯示 10 筆）</h2>
 
 @if (!Model.Any())
 {
-    <p>你目前沒有任何學習紀錄。</p>
+    <div class="alert alert-warning">
+        你目前沒有任何學習紀錄 😢
+    </div>
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>報表名稱</th>
-                <th>完成時間</th>
-                <th>總題數</th>
-                <th>答對題數</th>
-                <th>正確率 (%)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var record in Model)
+    <div class="accordion" id="learnReportAccordion">
+        @for (int i = 0; i < Model.Count(); i++)
+        {
+            var record = Model.ElementAt(i);
+            string headingId = $"heading{i}";
+            string collapseId = $"collapse{i}";
+
+            // 根據正確率決定顏色與 emoji
+            string accuracyClass;
+            string accuracyEmoji;
+            if (record.Accuracy >= 80)
             {
-                <tr>
-                    <td>@record.RecordID</td>
-                    <td>@record.AnswerTime.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@record.TotalAnswers</td>
-                    <td>@record.CorrectAnswers</td>                    
-                    <td>@record.Accuracy</td>
-                </tr>
+                accuracyClass = "text-success";
+                accuracyEmoji = "😄";
             }
-        </tbody>
-    </table>
+            else if (record.Accuracy >= 50)
+            {
+                accuracyClass = "text-warning";
+                accuracyEmoji = "😐";
+            }
+            else
+            {
+                accuracyClass = "text-danger";
+                accuracyEmoji = "😢";
+            }
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="@headingId">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+                        @record.RecordID - 完成時間: @record.AnswerTime.ToString("yyyy-MM-dd HH:mm")
+                    </button>
+                </h2>
+                <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId" data-bs-parent="#learnReportAccordion">
+                    <div class="accordion-body">
+                        <p><strong>總題數：</strong> @record.TotalAnswers</p>
+                        <p><strong>答對題數：</strong> @record.CorrectAnswers</p>
+                        <p><strong>正確率：</strong> <span class="@accuracyClass">@record.Accuracy % @accuracyEmoji</span></p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
+
+<div class="mt-4">
+    <a asp-controller="MemberCenter" asp-action="Index" class="btn btn-secondary">
+        🏠 返回首頁
+    </a>
+</div>
