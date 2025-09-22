@@ -22,5 +22,7 @@ namespace JapaneseLearnSystem.Models
         public string? JLPTLevelName { get; set; }  // 用於顯示文字
 
         public string? MemberID { get; set; } // 從登入會員取得，允許為 null
+
+        public DateTime? CreateNoteAt { get; set; }
     }
 }

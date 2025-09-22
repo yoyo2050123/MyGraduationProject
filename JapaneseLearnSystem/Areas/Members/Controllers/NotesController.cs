@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace JapaneseLearnSystem.Areas.Members.Controllers
 {
@@ -24,7 +25,27 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         {
             string memberId = User.FindFirst("MemberID")?.Value;
 
+            var member = await _context.Member
+                .Include(m => m.Plan)
+                .FirstOrDefaultAsync(m => m.MemberID == memberId);
 
+            if (member == null) return Unauthorized();
+
+            int noteCount = await _context.Note.CountAsync(n => n.MemberID == member.MemberID);
+
+            // 計算剩餘筆數
+            string notesRemaining;
+            if (member.Plan?.NoteLimit.HasValue == true)
+            {
+                notesRemaining = (member.Plan.NoteLimit.Value - noteCount).ToString();
+            }
+            else
+            {
+                notesRemaining = "無限制";
+            }
+            ViewBag.NotesRemaining = notesRemaining;
+
+            // 取得筆記列表
             var notes = await _context.Note
                 .Include(n => n.JLPTLevel)
                 .Where(n => n.MemberID == memberId)
@@ -40,8 +61,11 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
                     MemberID = n.MemberID
                 })
                 .ToListAsync();
+
             return View(notes);
         }
+
+
 
         // GET: Members/Notes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -79,28 +103,70 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         // POST: Members/Notes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(NoteViewModel vm)
+        public IActionResult Create(NoteViewModel model)
         {
-
+            string memberId = User.FindFirst("MemberID")?.Value;
             if (ModelState.IsValid)
             {
+                var member = _context.Member
+                    .Include(m => m.Plan)
+                    .FirstOrDefault(m => m.MemberID == memberId);
+
+                if (member == null)
+                    return Unauthorized();
+
+                int noteCount = _context.Note.Count(n => n.MemberID == member.MemberID);
+                int noteLimit = member.Plan?.NoteLimit ?? int.MaxValue;
+
+                if (noteCount >= noteLimit)
+                {
+                    ModelState.AddModelError("", "已達到筆記數量上限。");
+                    ViewData["JLPTLevels"] = new SelectList(_context.JLPTLevel, "JLPTLevelID", "JLPTLevelName", model.JLPTLevelID);
+                    return View(model);
+                }
+
                 var note = new Note
                 {
-                    Title = vm.Title,
-                    OriginalArticle = vm.OriginalArticle,
-                    Reading = vm.Reading,
-                    Translate = vm.Translate,
-                    JLPTLevelID = vm.JLPTLevelID,
-                    MemberID = User.FindFirst("MemberID")?.Value
+                    Title = model.Title,
+                    OriginalArticle = model.OriginalArticle,
+                    Reading = model.Reading,
+                    Translate = model.Translate,
+                    JLPTLevelID = model.JLPTLevelID,
+                    MemberID = member.MemberID
                 };
 
-                _context.Add(note);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Note.Add(note);
+
+                // ===== 更新 MemberUsageLog =====
+                var today = DateOnly.FromDateTime(DateTime.Today);
+                var usage = _context.MemberUsageLog
+                    .FirstOrDefault(u => u.MemberID == member.MemberID && u.UsageLogDate == today);
+
+                if (usage == null)
+                {
+                    usage = new MemberUsageLog
+                    {
+                        UsageLogID = $"U{member.MemberID}{today:yyyyMMdd}",
+                        MemberID = member.MemberID,
+                        UsageLogDate = today,
+                        NoteCount = 1,
+                        WordCount = 0,
+                        QuestionCount = 0,
+                        CreatedAt = DateTime.Now
+                    };
+                    _context.MemberUsageLog.Add(usage);
+                }
+                else
+                {
+                    usage.NoteCount += 1;
+                }
+
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
 
-            ViewData["JLPTLevels"] = new SelectList(_context.JLPTLevel, "JLPTLevelID", "JLPTLevelName", vm.JLPTLevelID);
-            return View(vm);
+            ViewData["JLPTLevels"] = new SelectList(_context.JLPTLevel, "JLPTLevelID", "JLPTLevelName", model.JLPTLevelID);
+            return View(model);
         }
 
         // GET: Members/Notes/Edit/5
@@ -197,9 +263,22 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
             var note = await _context.Note.FindAsync(id);
             if (note != null)
             {
+                var memberId = note.MemberID;
                 _context.Note.Remove(note);
+
+                // ===== 更新 MemberUsageLog =====
+                var today = DateOnly.FromDateTime(DateTime.Today);
+                var usage = _context.MemberUsageLog
+                    .FirstOrDefault(u => u.MemberID == memberId && u.UsageLogDate == today);
+
+                if (usage != null && usage.NoteCount > 0)
+                {
+                    usage.NoteCount -= 1;
+                }
+
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction(nameof(Index));
         }
     }

@@ -76,20 +76,24 @@ public class QuestionGenerate
             };
 
             var optionsSet = new HashSet<string>();
-            optionsSet.Add(correctOptionContent); // 正確答案先加入
+            optionsSet.Add(correctOptionContent);
 
-            var options = new List<QuestionOption>();
-            options.Add(new QuestionOption
+            var options = new List<QuestionOption>
             {
-                QuestionInstanceID = questionInstance.QuestionInstanceID,
-                OptionID = "1",
-                OptionContent = correctOptionContent
-            });
+                new QuestionOption
+                {
+                    QuestionInstanceID = questionInstance.QuestionInstanceID,
+                    OptionID = "1", // 先給一個臨時 ID
+                    OptionContent = correctOptionContent
+                }
+            };
 
             // 幹擾選項
-            var shuffledWords = words.Where(w => w.WordID != word.WordID).OrderBy(x => _random.Next()).ToList();
-            int idx = 2;
+            var shuffledWords = words.Where(w => w.WordID != word.WordID)
+                                     .OrderBy(x => _random.Next())
+                                     .ToList();
 
+            int idx = 2;
             foreach (var w in shuffledWords)
             {
                 string optionContent = template.QuestionType switch
@@ -99,9 +103,9 @@ public class QuestionGenerate
                     _ => w.Vocabulary
                 };
 
-                if (optionsSet.Contains(optionContent)) continue; // 避免重複
-                optionsSet.Add(optionContent);
+                if (optionsSet.Contains(optionContent)) continue;
 
+                optionsSet.Add(optionContent);
                 options.Add(new QuestionOption
                 {
                     QuestionInstanceID = questionInstance.QuestionInstanceID,
@@ -113,8 +117,20 @@ public class QuestionGenerate
                 if (options.Count >= 4) break; // 3個干擾 + 1個正確答案
             }
 
-            questionInstance.AnswerOptionID = "1";
-            questionInstance.QuestionOption = options.OrderBy(x => _random.Next()).ToList(); // 打亂
+            // 打亂選項
+            var shuffledOptions = options.OrderBy(x => _random.Next()).ToList();
+
+            // 重新給 OptionID
+            for (int i = 0; i < shuffledOptions.Count; i++)
+            {
+                shuffledOptions[i].OptionID = (i + 1).ToString();
+            }
+
+            // 正確答案對應新的 OptionID
+            var correctOption = shuffledOptions.First(o => o.OptionContent == correctOptionContent);
+            questionInstance.AnswerOptionID = correctOption.OptionID;
+
+            questionInstance.QuestionOption = shuffledOptions;
 
             _context.QuestionInstance.Add(questionInstance);
             await _context.SaveChangesAsync();

@@ -24,3 +24,10 @@ body {
 .text-red {
     color: red;
 }
+
+.homepage-banner {
+    width: 80%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}

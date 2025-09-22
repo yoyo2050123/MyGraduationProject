@@ -4,48 +4,56 @@
     ViewData["Title"] = "Create Note";
 }
 
-<h1>Create Note</h1>
+<div class="container mt-5">
+    <div class="card shadow-sm rounded-3">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">新增筆記</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<form asp-action="Create">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control" placeholder="請輸入筆記標題" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="OriginalArticle" class="form-label"></label>
+                    <textarea asp-for="OriginalArticle" class="form-control" rows="3" placeholder="請輸入原文"></textarea>
+                    <span asp-validation-for="OriginalArticle" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Reading" class="form-label"></label>
+                    <input asp-for="Reading" class="form-control" placeholder="請輸入單字讀音" />
+                    <span asp-validation-for="Reading" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Translate" class="form-label"></label>
+                    <textarea asp-for="Translate" class="form-control" rows="2" placeholder="請輸入翻譯內容"></textarea>
+                    <span asp-validation-for="Translate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="JLPTLevelID" class="form-label"></label>
+                    <select asp-for="JLPTLevelID" class="form-select" asp-items="@(ViewData["JLPTLevels"] as IEnumerable<SelectListItem>)">
+                        <option value="">請選擇 JLPT 等級</option>
+                    </select>
+                    <span asp-validation-for="JLPTLevelID" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary btn-lg">返回筆記列表</a>
+                    <button type="submit" class="btn btn-primary btn-lg">新增筆記</button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <label asp-for="OriginalArticle"></label>
-        <input asp-for="OriginalArticle" class="form-control" />
-        <span asp-validation-for="OriginalArticle" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Reading"></label>
-        <input asp-for="Reading" class="form-control" />
-        <span asp-validation-for="Reading" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Translate"></label>
-        <input asp-for="Translate" class="form-control" />
-        <span asp-validation-for="Translate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="JLPTLevelID"></label>
-        <select asp-for="JLPTLevelID" class="form-control" asp-items="@(ViewData["JLPTLevels"] as IEnumerable<SelectListItem>)">
-            <option value="">請選擇單字的 JLPT 等級</option>
-        </select>
-        <span asp-validation-for="JLPTLevelID" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
-</form>
 
 @section Scripts {
     @{
