@@ -1,46 +1,57 @@
-﻿
-@model JapaneseLearnSystem.Models.LoginViewModel
+﻿@model JapaneseLearnSystem.Models.LoginViewModel
 
 @{
     ViewData["Title"] = "登入";
     var loginMsg = TempData["LoginError"] as string;
     var logoutMsg = TempData["LogoutMsg"] as string;
-
 }
 
-<h1>登入畫面</h1>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4" style="width: 400px;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">日文學習系統 - 登入</h3>
 
-@if (!string.IsNullOrEmpty(logoutMsg))
-{
-    <div class="alert alert-success">@logoutMsg</div>
-}
+            @* 登出成功訊息 *@
+            @if (!string.IsNullOrEmpty(logoutMsg))
+            {
+                <div class="alert alert-success text-center">@logoutMsg</div>
+            }
 
-@if (!string.IsNullOrEmpty(loginMsg))
-{
-    <div class="alert alert-danger">@loginMsg</div>
-}
+            @* 登入錯誤訊息 *@
+            @if (!string.IsNullOrEmpty(loginMsg))
+            {
+                <div class="alert alert-danger text-center">@loginMsg</div>
+            }
 
-    
+            <form asp-controller="Account" asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<form asp-controller="Account" asp-action="Login" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Account" class="form-label">帳號</label>
+                    <input asp-for="Account" class="form-control" placeholder="請輸入帳號" />
+                    <span asp-validation-for="Account" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Account">帳號</label>
-        <input asp-for="Account" class="form-control"/>
-        <span asp-validation-for="Account" class="text-danger"></span>       
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">密碼</label>
+                    <input asp-for="Password" class="form-control" type="password" placeholder="請輸入密碼" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                @Html.HiddenFor(model => model.ReturnUrl)  @* 暫時保留 Hidden，用後端檢查安全性 *@
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">登入 🚀</button>
+                </div>
+            </form>
+
+            <div class="text-center mt-3">
+                <a asp-action="Register" asp-controller="Account">還沒有帳號？立即註冊</a>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Password">密碼</label>
-        <input asp-for="Password" class="form-control" type="password"/>
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    @Html.HiddenFor(model => model.ReturnUrl)   @* 這裡生成隱藏欄位 *@
-
-    <button type="submit" class="btn btn-primary">登入</button>
-</form>
+</div>
 
 @section Scripts {
     @{

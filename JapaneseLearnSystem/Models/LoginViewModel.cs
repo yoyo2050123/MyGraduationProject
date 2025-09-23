@@ -15,6 +15,7 @@ namespace JapaneseLearnSystem.Models
         [DataType(DataType.Password)]            // 顯示為密碼框
         public string Password { get; set; }
 
+
         [HiddenInput(DisplayValue = false)]
         public string? ReturnUrl { get; set; }
     }

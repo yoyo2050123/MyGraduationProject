@@ -38,5 +38,23 @@ namespace JapaneseLearnSystem.Models // 請確認這是你的專案命名空間
         [DataType(DataType.Date)]
         [Display(Name = "生日")]
         public DateTime Birthday { get; set; }
+
+        public static ValidationResult? ValidateBirthday(DateTime birthday, ValidationContext context)
+        {
+            if (birthday > DateTime.Today)
+            {
+                return new ValidationResult("生日不能是未來日期");
+            }
+
+            var age = DateTime.Today.Year - birthday.Year;
+            if (birthday.Date > DateTime.Today.AddYears(-age)) age--;
+
+            if (age < 10)
+            {
+                return new ValidationResult("註冊會員需年滿10歲");
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }
