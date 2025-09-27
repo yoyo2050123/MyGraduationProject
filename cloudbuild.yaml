@@ -1,13 +1,22 @@
+# cloudbuild.yaml
+# Google Cloud Build 設定檔
+# 會建置 Docker image 並推到 Container Registry
+
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'build',
-    '-t', 'gcr.io/$PROJECT_ID/japaneselearnsystem',
-    '-f', 'JapaneseLearnSystem/Dockerfile',
-    '.'
-  ]
-options:
-  logging: CLOUD_LOGGING_ONLY
+  # 1. 建置 Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'bash'
+      - '-c'
+      - |
+        cd JapaneseLearnSystem
+        docker build -t gcr.io/$PROJECT_ID/japaneselearnsystem .
+
+  # 2. 推送到 Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/japaneselearnsystem'
 
 images:
-- 'gcr.io/$PROJECT_ID/japaneselearnsystem'
+  - 'gcr.io/$PROJECT_ID/japaneselearnsystem'
