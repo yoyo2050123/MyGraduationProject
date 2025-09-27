@@ -9,4 +9,5 @@ namespace JapaneseLearnSystem.Areas.Members.Models
         public List<QuestionOption> Options { get; set; } = new();
         public string? SelectedOptionID { get; set; }  // 使用者選的答案
     }
+
 }

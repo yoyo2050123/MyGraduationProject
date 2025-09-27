@@ -30,7 +30,7 @@ namespace JapaneseLearnSystem.Areas.Members.Models
 
         // 是否答對
         public bool IsCorrect => UserAnswer == CorrectAnswer;
-
+        
         // 顯示用：使用者選項內容
         public string UserAnswerContent { get; set; } = string.Empty;
 

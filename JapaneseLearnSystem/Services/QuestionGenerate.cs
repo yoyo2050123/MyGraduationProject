@@ -78,17 +78,17 @@ public class QuestionGenerate
             var optionsSet = new HashSet<string>();
             optionsSet.Add(correctOptionContent);
 
+            // 1. 先建立選項（正確答案 + 幹擾選項）
             var options = new List<QuestionOption>
             {
                 new QuestionOption
                 {
                     QuestionInstanceID = questionInstance.QuestionInstanceID,
-                    OptionID = "1", // 先給一個臨時 ID
+                    OptionID = "1", // 正確答案暫時編號
                     OptionContent = correctOptionContent
                 }
             };
 
-            // 幹擾選項
             var shuffledWords = words.Where(w => w.WordID != word.WordID)
                                      .OrderBy(x => _random.Next())
                                      .ToList();
@@ -109,29 +109,25 @@ public class QuestionGenerate
                 options.Add(new QuestionOption
                 {
                     QuestionInstanceID = questionInstance.QuestionInstanceID,
-                    OptionID = idx.ToString(),
+                    OptionID = idx.ToString(), // 干擾選項 2~4
                     OptionContent = optionContent
                 });
 
                 idx++;
-                if (options.Count >= 4) break; // 3個干擾 + 1個正確答案
+                if (options.Count >= 4) break; // 共 4 個選項
             }
 
-            // 打亂選項
+            // 2. 打亂選項順序
             var shuffledOptions = options.OrderBy(x => _random.Next()).ToList();
 
-            // 重新給 OptionID
-            for (int i = 0; i < shuffledOptions.Count; i++)
-            {
-                shuffledOptions[i].OptionID = (i + 1).ToString();
-            }
-
-            // 正確答案對應新的 OptionID
+            // 3. 設定正確答案對應打亂後的 OptionID
             var correctOption = shuffledOptions.First(o => o.OptionContent == correctOptionContent);
             questionInstance.AnswerOptionID = correctOption.OptionID;
 
+            // 4. 儲存打亂後的選項
             questionInstance.QuestionOption = shuffledOptions;
 
+            // 5. 存入資料庫
             _context.QuestionInstance.Add(questionInstance);
             await _context.SaveChangesAsync();
 

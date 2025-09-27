@@ -164,10 +164,6 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
 
 
 
-        public IActionResult QuestionResult()
-        {
-            return View();
-        }
 
 
     }

@@ -1,12 +1,6 @@
 ﻿using JapaneseLearnSystem.Areas.Members.Models;
 using JapaneseLearnSystem.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-
 
 namespace JapaneseLearnSystem.Services
 {
@@ -49,12 +43,12 @@ namespace JapaneseLearnSystem.Services
                     UserAnswer = answer.SelectedOptionID ?? string.Empty,
                     CorrectAnswer = question.AnswerOptionID,
                     UserAnswerContent = userOption?.OptionContent ?? string.Empty,
-                    CorrectAnswerContent = correctOption?.OptionContent ?? string.Empty
+                    CorrectAnswerContent = correctOption?.OptionContent ?? string.Empty,
+                    
                 });
             }
 
             return resultList;
         }
     }
-
 }

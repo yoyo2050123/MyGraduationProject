@@ -29,8 +29,8 @@
             <tr class="@(q.IsCorrect ? "table-success" : "table-danger")">
                 <td>@(i + 1)</td>
                 <td>@q.QuestionContent</td>
-                <td>@q.UserAnswer</td>
-                <td>@q.CorrectAnswer</td>
+                <td>@q.UserAnswerContent</td>
+                <td>@q.CorrectAnswerContent</td>
                 <td>
                     @if (q.IsCorrect)
                     {
