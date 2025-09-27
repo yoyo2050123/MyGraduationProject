@@ -14,13 +14,13 @@ steps:
         dotnet publish JapaneseLearnSystem.sln -c Release -o /app/publish
 
   # 2. 使用 Kaniko 建立並推送 Docker 映像檔
-  - name: 'gcr.io/kaniko-project/executor:latest'
-    id: 'kaniko-build'
-    args:
-      - "--dockerfile=JapaneseLearnSystem/Dockerfile"
-      - "--context=./"
-      - "--destination=gcr.io/$PROJECT_ID/japaneselearnsystem:latest"
-      - "--no-cache"
+- name: 'gcr.io/kaniko-project/executor:latest'
+  id: 'kaniko-build'
+  args:
+    - "--dockerfile=Dockerfile"
+    - "--context=JapaneseLearnSystem/"
+    - "--destination=gcr.io/$PROJECT_ID/japaneselearnsystem:latest"
+    - "--no-cache"
 
 # 指定最終產生的映像檔
 images:
