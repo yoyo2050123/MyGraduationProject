@@ -20,7 +20,7 @@ steps:
       - "--dockerfile=Dockerfile"
       - "--context=JapaneseLearnSystem/"
       - "--destination=gcr.io/$PROJECT_ID/japaneselearnsystem:latest"
-      - "--no-cache"
+      - "--no-push-cache"
 
 # 指定最終產生的映像檔
 images:
