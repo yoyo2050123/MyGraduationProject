@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # 複製整個專案資料夾到容器
-COPY JapaneseLearnSystem/ ./JapaneseLearnSystem/
+COPY ./ ./ 
 
 # 切換工作目錄到專案資料夾
 WORKDIR /src/JapaneseLearnSystem
