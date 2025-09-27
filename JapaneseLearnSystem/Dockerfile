@@ -3,8 +3,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # 複製 .sln 和 csproj
-COPY JapaneseLearnSystem/JapaneseLearnSystem.sln ./
-COPY JapaneseLearnSystem/JapaneseLearnSystem.csproj ./JapaneseLearnSystem/
+COPY *.sln ./
+COPY JapaneseLearnSystem/*.csproj ./JapaneseLearnSystem/
 
 # 還原套件
 RUN dotnet restore JapaneseLearnSystem.sln
