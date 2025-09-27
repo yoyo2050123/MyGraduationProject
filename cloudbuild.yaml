@@ -1,5 +1,5 @@
 # cloudbuild.yaml
-# 使用 Cloud Build 建置並推送 .NET 8 專案 Docker 映像檔
+# 使用 Cloud Build 建置並推送 .NET 8 專案 Docker 映像檔 (Kaniko, 無快取)
 
 steps:
   # 1. 使用 .NET SDK 建置並發佈
@@ -13,22 +13,14 @@ steps:
         dotnet restore JapaneseLearnSystem.sln
         dotnet publish JapaneseLearnSystem.sln -c Release -o /app/publish
 
-  # 2. 使用 Docker 建立映像檔
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'docker-build'
-    dir: 'JapaneseLearnSystem'      # 指定 Dockerfile 所在目錄
+  # 2. 使用 Kaniko 建立並推送 Docker 映像檔
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    id: 'kaniko-build'
     args:
-      - build
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/japaneselearnsystem:latest'
-      - '.'
-
-  # 3. 推送映像檔到 GCR
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'docker-push'
-    args:
-      - push
-      - 'gcr.io/$PROJECT_ID/japaneselearnsystem:latest'
+      - "--dockerfile=JapaneseLearnSystem/Dockerfile"
+      - "--context=./"
+      - "--destination=gcr.io/$PROJECT_ID/japaneselearnsystem:latest"
+      - "--no-cache"
 
 # 指定最終產生的映像檔
 images:
