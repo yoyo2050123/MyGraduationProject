@@ -22,9 +22,6 @@ steps:
       - "--destination=gcr.io/$PROJECT_ID/japaneselearnsystem:latest"
       - "--no-push-cache"
 
-# 指定最終產生的映像檔
-images:
-  - 'gcr.io/$PROJECT_ID/japaneselearnsystem:latest'
 
 # 日誌設定
 options:
