@@ -32,11 +32,11 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # 設定環境變數
-ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_URLS=http://+:8080
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 # 開放 HTTP 80 port
-EXPOSE 80
+EXPOSE 8080
 
 # 啟動應用程式
 ENTRYPOINT ["dotnet", "JapaneseLearnSystem.dll"]
