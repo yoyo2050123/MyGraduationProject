@@ -6,6 +6,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # 設定工作目錄
 WORKDIR /src
+WORKDIR /src
+COPY ./JapaneseLearnSystem.sln ./
+COPY ./JapaneseLearnSystem ./JapaneseLearnSystem/
+WORKDIR /src/JapaneseLearnSystem
+RUN dotnet restor
 
 # 複製專案資料夾到容器
 COPY ./ ./JapaneseLearnSystem/
