@@ -26,11 +26,34 @@
                     <input asp-for="Count" class="form-control text-center fs-5" type="number" oninvalid="this.setCustomValidity('請輸入 1~20 的題目數')" oninput="this.setCustomValidity('')" />
                     <span asp-validation-for="Count" class="text-danger"></span>
                 </div>
+                <div class="btn-group" role="group" aria-label="JLPT Level Selection">
+
+                    <input type="checkbox" class="btn-check" id="N1" name="SelectedLevels" value="N1" autocomplete="off" @(Model.SelectedLevels.Contains("N1") ? "checked" : "") />
+                    <label class="btn btn-outline-primary" for="N1">N1</label>
+
+                    <input type="checkbox" class="btn-check" id="N2" name="SelectedLevels" value="N2" autocomplete="off" @(Model.SelectedLevels.Contains("N2") ? "checked" : "") />
+                    <label class="btn btn-outline-primary" for="N2">N2</label>
+
+                    <input type="checkbox" class="btn-check" id="N3" name="SelectedLevels" value="N3" autocomplete="off" @(Model.SelectedLevels.Contains("N3") ? "checked" : "") />
+                    <label class="btn btn-outline-primary" for="N3">N3</label>
+
+                    <input type="checkbox" class="btn-check" id="N4" name="SelectedLevels" value="N4" autocomplete="off" @(Model.SelectedLevels.Contains("N4") ? "checked" : "") />
+                    <label class="btn btn-outline-primary" for="N4">N4</label>
+
+                    <input type="checkbox" class="btn-check" id="N5" name="SelectedLevels" value="N5" autocomplete="off" @(Model.SelectedLevels.Contains("N5") ? "checked" : "") />
+                    <label class="btn btn-outline-primary" for="N5">N5</label>
+
+                </div>
+                <div class="text-danger">
+                    @Html.ValidationMessageFor(m => m.SelectedLevels)
+                </div>
 
                 <div class="d-flex justify-content-between mt-4">
                     <button type="submit" class="btn btn-primary flex-grow-1 me-2">開始練習 🏃‍♂️</button>
                     <a asp-controller="MemberCenter" asp-action="Index" class="btn btn-secondary flex-grow-1 ms-2">返回首頁 🏠</a>
                 </div>
+                <br />
+
             </form>
         </div>
     </div>

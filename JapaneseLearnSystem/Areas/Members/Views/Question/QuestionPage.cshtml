@@ -11,7 +11,9 @@
     <div class="alert alert-success">@TempData["ResultMessage"]</div>
 }
 
-<form asp-action="QuestionPage" method="post">
+<form asp-action="QuestionResult" method="post">
+    @Html.AntiForgeryToken()
+
     @for (int i = 0; i < Model.Count; i++)
     {
         <div class="question-block mb-3">
@@ -23,8 +25,7 @@
                     <input class="form-check-input" type="radio"
                            asp-for="@Model[i].SelectedOptionID"
                            value="@Model[i].Options[j].OptionID"
-                           id="q@i-option@j"
-                           name="[@i].SelectedOptionID" />
+                           id="q@i-option@j" />
 
                     <label class="form-check-label" for="q@i-option@j">
                         @Model[i].Options[j].OptionContent
@@ -32,9 +33,10 @@
                 </div>
             }
 
-            <input type="hidden" asp-for="@Model[i].QuestionInstanceID" />
+            @Html.HiddenFor(m => m[i].QuestionInstanceID)
         </div>
     }
 
     <button type="submit" class="btn btn-primary">提交答案</button>
+    <a asp-action="QuestionPage" asp-route-count="@Model.Count" class="btn btn-warning">重抽題目 🔄</a>
 </form>

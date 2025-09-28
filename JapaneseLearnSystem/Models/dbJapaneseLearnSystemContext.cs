@@ -252,7 +252,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
 
             entity.Property(e => e.QuestionInstanceID).HasMaxLength(50);
             entity.Property(e => e.OptionID).HasMaxLength(50);
-            entity.Property(e => e.OptionContent).HasMaxLength(20);
+            entity.Property(e => e.OptionContent).HasMaxLength(500);
 
             entity.HasOne(d => d.QuestionInstance).WithMany(p => p.QuestionOption)
                 .HasForeignKey(d => d.QuestionInstanceID)
@@ -310,7 +310,7 @@ public partial class dbJapaneseLearnSystemContext : DbContext
             entity.Property(e => e.PartOfSpeech).HasMaxLength(50);
             entity.Property(e => e.Reading).HasMaxLength(100);
             entity.Property(e => e.Vocabulary).HasMaxLength(50);
-            entity.Property(e => e.WordTranslate).HasMaxLength(20);
+            entity.Property(e => e.WordTranslate).HasMaxLength(500);
 
             entity.HasOne(d => d.JLPTLevel).WithMany(p => p.Word)
                 .HasForeignKey(d => d.JLPTLevelID)
