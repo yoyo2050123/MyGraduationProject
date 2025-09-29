@@ -122,27 +122,31 @@ public class QuestionController : Controller
             return RedirectToAction("PracticePrepare");
 
         var resultList = new List<QuestionResult>();
+        int total = model.Count;
+        int correct = 0;
 
         foreach (var q in model)
         {
-            // 取得該題正確答案的 Option
             var correctOption = await _context.QuestionOption
-                .Where(o => o.QuestionInstanceID == q.QuestionInstanceID && o.OptionID == _context.QuestionInstance
-                    .Where(qq => qq.QuestionInstanceID == q.QuestionInstanceID)
-                    .Select(qq => qq.AnswerOptionID)
-                    .FirstOrDefault())
+                .Where(o => o.QuestionInstanceID == q.QuestionInstanceID &&
+                            o.OptionID == _context.QuestionInstance
+                                .Where(qq => qq.QuestionInstanceID == q.QuestionInstanceID)
+                                .Select(qq => qq.AnswerOptionID)
+                                .FirstOrDefault())
                 .FirstOrDefaultAsync();
 
-            // 取得使用者選的 Option
             var userOption = await _context.QuestionOption
-                .Where(o => o.QuestionInstanceID == q.QuestionInstanceID && o.OptionID.ToString() == q.SelectedOptionID)
+                .Where(o => o.QuestionInstanceID == q.QuestionInstanceID &&
+                            o.OptionID.ToString() == q.SelectedOptionID)
                 .FirstOrDefaultAsync();
 
-            // 取得題目內容
             var questionContent = await _context.QuestionInstance
                 .Where(qq => qq.QuestionInstanceID == q.QuestionInstanceID)
                 .Select(qq => qq.QuestionContent)
                 .FirstOrDefaultAsync();
+
+            if (userOption != null && userOption.OptionID == correctOption?.OptionID)
+                correct++;
 
             resultList.Add(new QuestionResult
             {
@@ -163,9 +167,40 @@ public class QuestionController : Controller
             });
         }
 
+        // 🔹 計算正確率
+        decimal accuracy = total > 0 ? Math.Round((decimal)correct / total * 100, 2) : 0;
+
+        // 🔹 產生流水號 RecordID
+        var lastRecord = await _context.LearnRecordTable
+            .OrderByDescending(r => r.RecordID)
+            .FirstOrDefaultAsync();
+
+        int nextNumber = 1;
+        if (lastRecord != null)
+        {
+            string lastNumberStr = lastRecord.RecordID.Substring(1);
+            if (int.TryParse(lastNumberStr, out int lastNumber))
+                nextNumber = lastNumber + 1;
+        }
+        string newRecordId = "R" + nextNumber.ToString("D4");
+
+        // 🔹 存入資料表
+        var record = new LearnRecordTable
+        {
+            RecordID = newRecordId,
+            MemberID = User.FindFirst("MemberID")?.Value ?? "Unknown",
+            LearnedWordCount = total,
+            TotalAnswers = total,
+            CorrectAnswers = correct,
+            Accuracy = accuracy,
+            AnswerTime = DateTime.Now
+        };
+
+        _context.LearnRecordTable.Add(record);
+        await _context.SaveChangesAsync();
+
+        // ✅ 傳 resultList 給 View 顯示答題狀況
         return View(resultList);
     }
-
-
 
 }
