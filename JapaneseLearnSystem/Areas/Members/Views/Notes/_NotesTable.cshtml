@@ -7,24 +7,34 @@
             <th>原文</th>
             <th>讀音</th>
             <th>翻譯</th>
-            <th>JLPT Level</th>
+            <th>JLPT</th>
             <th>操作</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var note in Model.Notes)
+        @if (Model.Notes.Any())
+        {
+            foreach (var note in Model.Notes)
+            {
+                <tr>
+                    <td class="truncate">@note.Title</td>
+                    <td class="truncate">@note.OriginalArticle</td>
+                    <td class="truncate">@note.Reading</td>
+                    <td class="truncate">@note.Translate</td>
+                    <td class="truncate">@note.JLPTLevelName</td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@note.NoteID" class="btn btn-sm btn-warning">編輯</a>
+                        <a asp-action="Details" asp-route-id="@note.NoteID" class="btn btn-sm btn-info">詳細</a>
+                        <a asp-action="Delete" asp-route-id="@note.NoteID" class="btn btn-sm btn-danger">刪除</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@note.Title</td>
-                <td>@note.OriginalArticle</td>
-                <td>@note.Reading</td>
-                <td>@note.Translate</td>
-                <td>@note.JLPTLevelName</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@note.NoteID" class="btn btn-sm btn-warning me-1">編輯</a>
-                    <a asp-action="Details" asp-route-id="@note.NoteID" class="btn btn-sm btn-info me-1">詳細</a>
-                    <a asp-action="Delete" asp-route-id="@note.NoteID" class="btn btn-sm btn-danger me-1">刪除</a>
-                </td>
+                <td colspan="6" class="text-center">查無資料</td>
             </tr>
         }
     </tbody>
@@ -33,7 +43,10 @@
 <div class="mt-3 d-flex gap-1">
     @for (int i = 1; i <= Model.TotalPages; i++)
     {
-        <button class="btn @(i == Model.CurrentPage ? "btn-primary" : "btn-outline-primary") page-btn" data-page="@i">
+        <button type="button"
+                class="btn @(i == Model.CurrentPage ? "btn-primary" : "btn-outline-primary") page-btn"
+                data-page="@i"
+                data-search="@Model.Search">
             @i
         </button>
     }

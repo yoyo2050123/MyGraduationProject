@@ -31,11 +31,55 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
             return View(vm);
         }
 
-        // GET: Members/Notes/Partial
-        public async Task<IActionResult> NotesPartial(int page = 1)
+        // 共用分頁邏輯（新增 search 參數），最小改動：只在這裡把搜尋併入 query
+        private async Task<NoteListViewModel> GetNotesPage(string memberId, int page, string? search = null)
+        {
+            const int pageSize = 20; // 你原本固定 20
+                                     // 基礎 Query（含 JLPTLevel）
+            var query = _context.Note
+                        .Include(n => n.JLPTLevel)
+                        .Where(n => n.MemberID == memberId);
+
+            // 如果有搜尋字串則加上條件（Title 或 OriginalArticle）
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(n => n.Title.Contains(search) || n.OriginalArticle.Contains(search));
+            }
+
+            var totalCount = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var notes = await query
+                .OrderBy(n => n.NoteID) // 你想要最早寫的筆記先出現
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(n => new NoteViewModel
+                {
+                    NoteID = n.NoteID,
+                    Title = n.Title,
+                    OriginalArticle = n.OriginalArticle,
+                    Reading = n.Reading,
+                    Translate = n.Translate,
+                    JLPTLevelID = n.JLPTLevelID,
+                    JLPTLevelName = n.JLPTLevel.JLPTLevelName,
+                    MemberID = n.MemberID
+                })
+                .ToListAsync();
+
+            return new NoteListViewModel
+            {
+                Notes = notes,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                Search = search
+            };
+        }
+        // Ajax Partial：支援 page 與 search
+        public async Task<IActionResult> NotesPartial(int page = 1, string? search = null)
         {
             string memberId = User.FindFirst("MemberID")?.Value;
-            var vm = await GetNotesPage(memberId, page);
+            var vm = await GetNotesPage(memberId, page, search);
+            ViewBag.NotesRemaining = await GetRemainingNotes(memberId);
             return PartialView("_NotesTable", vm);
         }
 

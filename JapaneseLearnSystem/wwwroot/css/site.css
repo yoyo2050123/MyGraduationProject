@@ -31,3 +31,10 @@ body {
     border-radius: 8px;
     margin-bottom: 20px;
 }
+.truncate {
+    word-wrap: break-word; /* 允許長文字換行 */
+    word-break: break-word; /* 確保超長單詞也換行 */
+    max-width: 200px; /* 可依需求調整欄位寬度 */
+}
+
+

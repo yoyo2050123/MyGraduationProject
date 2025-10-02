@@ -8,5 +8,6 @@ namespace JapaneseLearnSystem.Areas.Members.Models
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 
+        public string? Search { get; set; } // 🔑 搜尋字串
     }
 }

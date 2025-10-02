@@ -16,20 +16,48 @@
     </div>
 </div>
 
+<!-- 搜尋區 -->
+<div class="input-group mb-3 w-auto" style="max-width: 300px;">
+    <input id="searchInput" class="form-control" placeholder="搜尋標題或原文" value="@Model?.Search" />
+    <button id="searchBtn" class="btn btn-primary">搜尋</button>
+</div>
+
 <div id="notesTable">
+    @* 初始渲染：把 Controller 傳來的 vm（第一頁）直接渲染 Partial *@
     @await Html.PartialAsync("_NotesTable", Model)
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).on("click", ".page-btn", function() {
-        var page = $(this).data("page");
-        $.get("@Url.Action("NotesPartial", "Notes", new { area = "Members" })", { page: page }, function(result) {
-            $("#notesTable").html(result);
-        });
-    });
-</script>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function loadPage(page, search) {
+            $.get('@Url.Action("NotesPartial", "Notes", new { area = "Members" })', { page: page, search: search }, function(result) {
+                // result 是 PartialView HTML（表格 + 分頁按鈕）
+                $('#notesTable').html(result);
+                // （可選）把搜尋框值同步（partial 可能已有 Model.Search）
+                $('#searchInput').val(search || '');
+            });
+        }
 
-<div class="mt-3">
-    <a asp-controller="MemberCenter" asp-action="Index" class="btn btn-secondary">返回首頁</a>
-</div>
+        // 分頁按鈕（動態綁定）
+        $(document).on('click', '.page-btn', function() {
+            var page = $(this).data('page');
+            // 優先使用按鈕上的 data-search（如果有），否則使用輸入框
+            var search = $(this).data('search') || $('#searchInput').val();
+            loadPage(page, search);
+        });
+
+        // 搜尋按鈕
+        $('#searchBtn').click(function() {
+            var search = $('#searchInput').val();
+            loadPage(1, search);
+        });
+
+        // 按 Enter 也會搜尋
+        $('#searchInput').on('keypress', function(e) {
+            if (e.which === 13) {
+                $('#searchBtn').click();
+            }
+        });
+    </script>
+}
