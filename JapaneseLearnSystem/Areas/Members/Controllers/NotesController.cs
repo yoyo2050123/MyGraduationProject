@@ -42,7 +42,7 @@ namespace JapaneseLearnSystem.Areas.Members.Controllers
         // 共用：取得分頁資料
         private async Task<NoteListViewModel> GetNotesPage(string memberId, int page)
         {
-            int pageSize = 5;
+            int pageSize = 10;
             var totalCount = await _context.Note.CountAsync(n => n.MemberID == memberId);
             int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
